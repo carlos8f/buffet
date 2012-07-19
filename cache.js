@@ -19,6 +19,7 @@ function copy(orig) {
 
 function Cache(file, options) {
   this.options = copy(options);
+  this.options.maxAge || (this.options.maxAge = 300);
   this.file = file;
   this.buf = fs.readFileSync(file);
   this.gzip();

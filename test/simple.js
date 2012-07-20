@@ -129,7 +129,7 @@ describe('simple test', function() {
           // Give time for the watcher to pick it up
           setTimeout(function() {
             done();
-          }, 100);
+          }, 1000);
         });
       });
     });
@@ -171,8 +171,26 @@ describe('simple test', function() {
           });
         }).on('error', assert.ifError);
         req.end();
-        }, 100);
+        }, 1000);
       });
+    });
+
+    it("doesn't serve a .-prefixed file", function(done) {
+      var req = http.get(baseUrl + '/.htaccess', function(res) {
+        assert.equal(res.statusCode, 404);
+        assert.equal(res.headers['content-type'], 'text/plain');
+
+        var data = '';
+        res.setEncoding('utf8');
+        res.on('data', function(chunk) {
+          data += chunk;
+        });
+        res.on('end', function() {
+          assert.equal(data, 'file not found');
+          done();
+        });
+      }).on('error', assert.ifError);
+      req.end();
     });
   });
 });

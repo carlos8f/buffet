@@ -96,15 +96,17 @@ Cache.prototype.stream = function(req, res) {
       headers['Content-Length'] = this.gzippedLength;
     }
 
+    var status = 200;
     if (req.headers['if-none-match'] === headers['ETag'] || Date.parse(req.headers['if-modified-since']) >= this.stat.mtime) {
       delete headers['Content-Length'];
       delete headers['Content-Encoding'];
       res.writeHead(304, headers);
-      res.end();
+      return res.end();
     }
-
-    headers['Date'] = new Date().toUTCString();
-    res.writeHead(200, headers);
+    else {
+      headers['Date'] = new Date().toUTCString()
+      res.writeHead(200, headers);
+    }
 
     if (req.method === 'HEAD') {
       res.end();

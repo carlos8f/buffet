@@ -1,10 +1,10 @@
 var http = require('http')
-  , stalwartHandler = require('./')('test/files', {watch: true, watchInterval: 500})
+  , handler = require('./')('test/files')
   , port = 9000
   ;
 
 http.createServer(function(req, res) {
-  stalwartHandler(req, res, function() {
+  handler(req, res, function() {
     res.writeHead(404, {'Content-Type': 'text/plain'});
     res.write('file not found');
     res.end();

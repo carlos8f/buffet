@@ -3,6 +3,7 @@
   "name": "buffet",
   "description": "Performance-oriented static file server",
   "version": "0.1.2",
+  "main": "./lib",
   "repository": {
     "type": "git",
     "url": "git://github.com/carlos8f/node-buffet.git"
@@ -10,8 +11,8 @@
   "dependencies": {
     "mime": "~1.2.6",
     "diveSync": "~0.2.0",
-    "sync": "~v0.2.1",
-    "node_hash": "~0.2.0"
+    "node_hash": "~0.2.0",
+    "gzip-buffer": "0.0.2"
   },
   "devDependencies": {
     "mocha": "*"

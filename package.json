@@ -1,11 +1,11 @@
 {
   "author": "Carlos Rodriguez <carlos@s8f.org> (http://s8f.org/)",
-  "name": "stalwart",
-  "description": "Stubborn file streamer for Node.js",
+  "name": "buffet",
+  "description": "Performance-oriented static file server",
   "version": "0.1.2",
   "repository": {
     "type": "git",
-    "url": "git://github.com/carlos8f/node-stalwart.git"
+    "url": "git://github.com/carlos8f/node-buffet.git"
   },
   "dependencies": {
     "mime": "~1.2.6",

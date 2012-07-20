@@ -1,4 +1,4 @@
-node-stalwart
-=============
+node-buffet
+===========
 
-Stubborn file streamer for Node.js
+Performance-oriented static file server

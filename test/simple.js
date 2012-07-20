@@ -103,8 +103,8 @@ describe('simple test', function() {
   it('continues on 404', function(done) {
     var testPath = '/folder/not-there.txt';
     var req = http.get(baseUrl + testPath, function(res) {
-      assert.equal(res.headers['content-type'], 'text/plain');
       assert.equal(res.statusCode, 404);
+      assert.equal(res.headers['content-type'], 'text/plain');
 
       var data = '';
       res.setEncoding('utf8');
@@ -150,6 +150,29 @@ describe('simple test', function() {
         });
       }).on('error', assert.ifError);
       req.end();
+    });
+
+    it('serves a 404 after removing dynamic file', function(done) {
+      rimraf(testFolder + '/folder/' + folderName, function(err) {
+        assert.ifError(err);
+        setTimeout(function() {
+          var req = http.get(baseUrl + '/folder/' + folderName + '/test.json', function(res) {
+          assert.equal(res.statusCode, 404);
+          assert.equal(res.headers['content-type'], 'text/plain');
+
+          var data = '';
+          res.setEncoding('utf8');
+          res.on('data', function(chunk) {
+            data += chunk;
+          });
+          res.on('end', function() {
+            assert.equal(data, 'file not found');
+            done();
+          });
+        }).on('error', assert.ifError);
+        req.end();
+        }, 100);
+      });
     });
   });
 });

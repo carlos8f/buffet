@@ -1,7 +1,4 @@
-var fs = require('fs')
-  , url = require('url')
-  , mime = require('mime')
-  , join = require('path').join
+var url = require('url')
   , dive = require('diveSync')
   , path = require('path')
   , Cache = require('./cache')

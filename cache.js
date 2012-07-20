@@ -1,6 +1,4 @@
 var fs = require('fs')
-  , Stream = require('stream').Stream
-  , inherits = require('util').inherits
   , mime = require('mime')
   , hash = require('node_hash')
   , gzip = require('./gzip').gzip
@@ -28,7 +26,7 @@ function Cache(file, options) {
   if (/^text\//.exec(this.mime)) {
     this.gzip();
   }
-  
+
   this.buildHeaders();
 }
 

@@ -17,6 +17,10 @@ var stalwart = module.exports = function(root, options) {
 
     var urlPath = file.substring(root.length);
     cache[urlPath] = new Cache(file, options);
+    // Index support
+    if (path.basename(urlPath) === 'index.html') {
+      cache[path.dirname(urlPath)] = cache[urlPath];
+    }
   });
 
   return function stalwartHandler(req, res, next) {

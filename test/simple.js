@@ -2,11 +2,14 @@ var stalwart = require('../')
   , http = require('http')
   , assert = require('assert')
   , fs = require('fs')
+  , zlib = require('zlib')
   , port = 33333
   ;
 
 describe('simple test', function() {
+  var imgBuf;
   before(function(done) {
+    imgBuf = fs.readFileSync('test/files/folder/Alice-white-rabbit.jpg');
     var stalwartHandler = stalwart('test/files', {recursive: true});
     http.createServer(function(req, res) {
       stalwartHandler(req, res, function() {
@@ -51,7 +54,30 @@ describe('simple test', function() {
         chunks.push(chunk);
       });
       res.on('end', function() {
-        assert.deepEqual(Buffer.concat(chunks), fs.readFileSync('test/files/folder/Alice-white-rabbit.jpg'));
+        assert.deepEqual(Buffer.concat(chunks), imgBuf);
+        done();
+      });
+    }).on('error', function(err) {
+      console.error(err, 'error');
+    });
+    req.end();
+  });
+
+  it('serves gzip', function(done) {
+    var req = http.get({headers: {'Accept-Encoding': 'deflate, gzip'}, port: port, path: '/hello.txt'}, function(res) {
+      assert.equal(res.headers['content-type'], 'text/plain');
+      assert.equal(res.statusCode, 200);
+      assert.equal(res.headers['content-encoding'], 'gzip');
+
+      var decodedStream = zlib.createGunzip();
+      res.pipe(decodedStream);
+
+      var chunks = [];
+      decodedStream.on('data', function(chunk) {
+        chunks.push(chunk);
+      });
+      decodedStream.on('end', function() {
+        assert.deepEqual(Buffer.concat(chunks), imgBuf);
         done();
       });
     }).on('error', function(err) {

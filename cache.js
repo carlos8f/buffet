@@ -23,7 +23,7 @@ function Cache(file, options) {
   this.file = file;
   this.mime = mime.lookup(this.file);
   this.buf = fs.readFileSync(file);
-  if (/^text\//.exec(mime)) {
+  if (/^text\//.exec(this.mime)) {
     this.gzip();
   }
   this.buildHeaders();
@@ -51,13 +51,13 @@ Cache.prototype.gzip = function() {
   var self = this;
   sync(function() {
     self.gzipped = gzip.sync(null, self.buf, {});
-    self.gzippedLength = Buffer.byteLength(self.gzipped.toString());
+    self.gzippedLength = self.gzipped.length;
   });
 };
 
 Cache.prototype.stream = function(req, res) {
   var bufProp = 'buf', headers = copy(this.headers);
-  if (this.gzipped && req.headers['accept-encoding'] && /gzip/i.match(req.headers['accept-encoding'])) {
+  if (this.gzipped && req.headers['accept-encoding'] && /gzip/i.exec(req.headers['accept-encoding'])) {
     bufProp = 'gzipped';
     headers['Content-Encoding'] = 'gzip';
     headers['Content-Length'] = this.gzippedLength;

@@ -6,7 +6,9 @@ var url = require('url')
 
 var stalwart = module.exports = function(root, options) {
   var cache = {}, parsed = {};
-  typeof options.indexes !== 'undefined' || (options.indexes = true);
+  if (typeof options.indexes === 'undefined') {
+    options.indexes = true;
+  }
 
   root = path.resolve(root);
 

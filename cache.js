@@ -20,7 +20,9 @@ function copy(orig) {
 function Cache(file, options) {
   this.options = copy(options);
   this.options.maxAge || (this.options.maxAge = 300);
-  typeof this.options.gzip == 'undefined' || (this.options.gzip = true);
+  if (typeof this.options.gzip === 'undefined') {
+    this.options.gzip = true;
+  }
   this.file = file;
   this.mime = mime.lookup(this.file);
   this.stat = fs.statSync(this.file);

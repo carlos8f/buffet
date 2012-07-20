@@ -8,7 +8,7 @@ var buffet = require('../')
   , ncp = require('ncp').ncp
   , port = Math.round(Math.random() * 20000 + 20000)
   , baseUrl = 'http://localhost:' + port
-  , cleanup = false
+  , cleanup = true
   ;
 
 describe('simple test', function() {

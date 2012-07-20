@@ -1,26 +1,42 @@
-var stalwart = require('../')
+var buffet = require('../')
   , http = require('http')
   , assert = require('assert')
   , fs = require('fs')
   , zlib = require('zlib')
-  , port = 33333
+  , idgen = require('idgen')
+  , rimraf = require('rimraf')
+  , ncp = require('ncp').ncp
+  , port = Math.round(Math.random() * 20000 + 20000)
+  , baseUrl = 'http://localhost:' + port
   ;
 
 describe('simple test', function() {
-  var imgBuf;
+  var testFolder = '/tmp/buffet-test-' + idgen();
   before(function(done) {
-    var stalwartHandler = stalwart('test/files', {recursive: true});
-    http.createServer(function(req, res) {
-      stalwartHandler(req, res, function() {
-        res.writeHead(404, {'Content-Type': 'text/plain'});
-        res.write('file not found');
-        res.end();
-      });
-    }).listen(port, done);
+    ncp('test/files', testFolder, function(err) {
+      assert.ifError(err);
+      var handler = buffet(testFolder);
+      http.createServer(function(req, res) {
+        handler(req, res, function() {
+          res.writeHead(404, {'Content-Type': 'text/plain'});
+          res.write('file not found');
+          res.end();
+        });
+      }).listen(port, done);
+    });
+  });
+  after(function(done) {
+    done();
+    /*
+    rimraf(testFolder, function(err) {
+      assert.ifError(err);
+      done();
+    });
+    */
   });
 
   it('can serve a txt file', function(done) {
-    var req = http.get('http://localhost:' + port + '/hello.txt', function(res) {
+    var req = http.get(baseUrl + '/hello.txt', function(res) {
       assert.equal(res.headers['content-type'], 'text/plain');
       assert.ok(res.headers['last-modified']);
       assert.ok(res.headers['etag']);
@@ -37,14 +53,13 @@ describe('simple test', function() {
         assert.equal(data, 'hello world!');
         done();
       });
-    }).on('error', function(err) {
-      console.error(err, 'error');
-    });
+    }).on('error', assert.ifError);
     req.end();
   });
 
   it('can serve an image', function(done) {
-    var req = http.get('http://localhost:' + port + '/folder/Alice-white-rabbit.jpg', function(res) {
+    var testPath = '/folder/Alice-white-rabbit.jpg';
+    var req = http.get(baseUrl + testPath, function(res) {
       assert.equal(res.headers['content-type'], 'image/jpeg');
       assert.equal(res.statusCode, 200);
 
@@ -53,17 +68,16 @@ describe('simple test', function() {
         chunks.push(chunk);
       });
       res.on('end', function() {
-        assert.deepEqual(Buffer.concat(chunks), fs.readFileSync('test/files/folder/Alice-white-rabbit.jpg'));
+        assert.deepEqual(Buffer.concat(chunks), fs.readFileSync(testFolder + testPath));
         done();
       });
-    }).on('error', function(err) {
-      console.error(err, 'error');
-    });
+    }).on('error', assert.ifError);
     req.end();
   });
 
   it('serves gzip', function(done) {
-    var req = http.get({headers: {'Accept-Encoding': 'deflate, gzip'}, port: port, path: '/hello.txt'}, function(res) {
+    var testPath = '/hello.txt';
+    var req = http.get({headers: {'Accept-Encoding': 'deflate, gzip'}, port: port, path: testPath}, function(res) {
       assert.equal(res.headers['content-type'], 'text/plain');
       assert.equal(res.statusCode, 200);
       assert.equal(res.headers['content-encoding'], 'gzip');
@@ -76,17 +90,16 @@ describe('simple test', function() {
         chunks.push(chunk);
       });
       decodedStream.on('end', function() {
-        assert.deepEqual(Buffer.concat(chunks), fs.readFileSync('test/files/hello.txt'));
+        assert.deepEqual(Buffer.concat(chunks), fs.readFileSync(testFolder + testPath));
         done();
       });
-    }).on('error', function(err) {
-      console.error(err, 'error');
-    });
+    }).on('error', assert.ifError);
     req.end();
   });
 
   it('continues on 404', function(done) {
-    var req = http.get('http://localhost:' + port + '/folder/not-there.txt', function(res) {
+    var testPath = '/folder/not-there.txt';
+    var req = http.get(baseUrl + testPath, function(res) {
       assert.equal(res.headers['content-type'], 'text/plain');
       assert.equal(res.statusCode, 404);
 
@@ -99,9 +112,41 @@ describe('simple test', function() {
         assert.equal(data, 'file not found');
         done();
       });
-    }).on('error', function(err) {
-      console.error(err, 'error');
-    });
+    }).on('error', assert.ifError);
     req.end();
+  });
+
+  describe('watcher', function() {
+    var testData = {yay: true}, folderName = idgen();
+    before(function(done) {
+      fs.mkdir(testFolder + '/folder/' + folderName, function(err) {
+        assert.ifError(err);
+        fs.writeFile(testFolder + '/folder/' + folderName + '/test.json', JSON.stringify(testData), function(err) {
+          assert.ifError(err);
+          // Give time for the watcher to pick it up
+          setTimeout(function() {
+            done();
+          }, 500);
+        });
+      });
+    });
+
+    it('serves a dynamically created file', function(done) {
+      var req = http.get(baseUrl + '/folder/' + folderName + '/test.json', function(res) {
+        assert.equal(res.statusCode, 200);
+        assert.equal(res.headers['content-type'], 'application/json');
+
+        var data = '';
+        res.setEncoding('utf8');
+        res.on('data', function(chunk) {
+          data += chunk;
+        });
+        res.on('end', function() {
+          assert.deepEqual(JSON.parse(data), testData);
+          done();
+        });
+      }).on('error', assert.ifError);
+      req.end();
+    });
   });
 });

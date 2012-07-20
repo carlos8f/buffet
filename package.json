@@ -15,7 +15,10 @@
     "gzip-buffer": "0.0.2"
   },
   "devDependencies": {
-    "mocha": "*"
+    "mocha": "*",
+    "idgen": "1.x",
+    "rimraf": "2.x",
+    "ncp": "~0.2.6"
   },
   "optionalDependencies": {},
   "engines": {

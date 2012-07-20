@@ -12,7 +12,7 @@ var stalwart = module.exports = function(root, options) {
 
   root = path.resolve(root);
 
-  dive(root, function(err, file) {
+  dive(root, options, function(err, file) {
     if (err) throw err;
 
     var urlPath = file.substring(root.length);

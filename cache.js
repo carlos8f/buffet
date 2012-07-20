@@ -21,15 +21,18 @@ function Cache(file, options) {
   this.options = copy(options);
   this.options.maxAge || (this.options.maxAge = 300);
   this.file = file;
+  this.mime = mime.lookup(this.file);
   this.buf = fs.readFileSync(file);
-  this.gzip();
+  if (/^text\//.exec(mime)) {
+    this.gzip();
+  }
   this.buildHeaders();
 }
 
 Cache.prototype.buildHeaders = function() {
   var stats = fs.statSync(this.file);
   this.headers = {};
-  this.headers['Content-Type'] = mime.lookup(this.file);
+  this.headers['Content-Type'] = this.mime;
   var charset = mime.charsets.lookup(this.file);
   if (charset) {
     this.headers['Content-Type'] += '; charset=' + charset;
@@ -54,7 +57,7 @@ Cache.prototype.gzip = function() {
 
 Cache.prototype.stream = function(req, res) {
   var bufProp = 'buf', headers = copy(this.headers);
-  if (req.headers['accept-encoding'] && /gzip/i.match(req.headers['accept-encoding'])) {
+  if (this.gzipped && req.headers['accept-encoding'] && /gzip/i.match(req.headers['accept-encoding'])) {
     bufProp = 'gzipped';
     headers['Content-Encoding'] = 'gzip';
     headers['Content-Length'] = this.gzippedLength;

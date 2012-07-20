@@ -20,6 +20,7 @@ function copy(orig) {
 function Cache(file, options) {
   this.options = copy(options);
   this.options.maxAge || (this.options.maxAge = 300);
+  typeof this.options.gzip == 'undefined' || (this.options.gzip = true);
   this.file = file;
   this.mime = mime.lookup(this.file);
   this.stat = fs.statSync(this.file);
@@ -40,7 +41,7 @@ Cache.prototype.cacheFile = function() {
   this.ready = false;
   this.buf = fs.readFileSync(this.file);
   this.buildHeaders();
-  if (/^text\//.exec(this.mime)) {
+  if (this.options.gzip && /^text\//.exec(this.mime)) {
     this.gzip();
   }
   this.ready = true;

@@ -1,5 +1,5 @@
 var http = require('http')
-  , stalwartHandler = require('./')('test/files')
+  , stalwartHandler = require('./')('test/files', {watch: true, watchInterval: 500})
   , port = 9000
   ;
 

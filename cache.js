@@ -3,6 +3,8 @@ var fs = require('fs')
   , hash = require('node_hash')
   , gzip = require('./gzip').gzip
   , sync = require('sync')
+  , inherits = require('util').inherits
+  , EventEmitter = require('events').EventEmitter
   ;
 
 function copy(orig) {
@@ -19,16 +21,31 @@ function Cache(file, options) {
   this.options = copy(options);
   this.options.maxAge || (this.options.maxAge = 300);
   this.file = file;
-  this.stats = fs.statSync(this.file);
   this.mime = mime.lookup(this.file);
-  this.buf = fs.readFileSync(file);
+  this.stat = fs.statSync(this.file);
+  this.cacheFile();
 
+  if (this.options.watch) {
+    fs.watchFile(file, {persistent: false, interval: this.options.watchInterval || 2000}, this.onChange.bind(this));
+  }
+}
+inherits(Cache, EventEmitter);
+
+Cache.prototype.onChange = function(stat) {
+  this.stat = stat;
+  this.cacheFile();
+};
+
+Cache.prototype.cacheFile = function() {
+  this.ready = false;
+  this.buf = fs.readFileSync(this.file);
+  this.buildHeaders();
   if (/^text\//.exec(this.mime)) {
     this.gzip();
   }
-
-  this.buildHeaders();
-}
+  this.ready = true;
+  this.emit('ready');
+};
 
 Cache.prototype.buildHeaders = function() {
   this.headers = {};
@@ -39,9 +56,9 @@ Cache.prototype.buildHeaders = function() {
     this.headers['Content-Type'] += '; charset=' + charset;
   }
 
-  this.headers['Last-Modified'] = this.stats.mtime.toUTCString();
+  this.headers['Last-Modified'] = this.stat.mtime.toUTCString();
   this.headers['ETag'] = hash.sha1(this.buf.toString());
-  this.headers['Content-Length'] = this.stats.size;
+  this.headers['Content-Length'] = this.stat.size;
   this.headers['Vary'] = 'Accept-Encoding';
   if (this.options.maxAge) {
     this.headers['Cache-Control'] = 'public, max-age: ' + this.options.maxAge;
@@ -57,31 +74,42 @@ Cache.prototype.gzip = function() {
   });
 };
 
-Cache.prototype.stream = function(req, res) {
-  var bufProp = 'buf', headers = copy(this.headers);
-
-  if (this.gzipped && req.headers['accept-encoding'] && /gzip/i.exec(req.headers['accept-encoding'])) {
-    bufProp = 'gzipped';
-    headers['Content-Encoding'] = 'gzip';
-    headers['Content-Length'] = this.gzippedLength;
-  }
-
-  if (req.headers['if-none-match'] === headers['ETag'] || Date.parse(req.headers['if-modified-since']) >= this.stats.mtime) {
-    delete headers['Content-Length'];
-    delete headers['Content-Encoding'];
-    res.writeHead(304, headers);
-    res.end();
-  }
-
-  res.writeHead(200, headers);
-
-  if (req.method === 'HEAD') {
-    res.end();
+Cache.prototype.onReady = function(cb) {
+  if (this.ready) {
+    cb.call(this);
   }
   else {
-    headers['Date'] = new Date().toUTCString();
-    res.end(this[bufProp]);
+    this.once('ready', cb.bind(this));
   }
+};
+
+Cache.prototype.stream = function(req, res) {
+  this.onReady(function() {
+    var bufProp = 'buf', headers = copy(this.headers);
+
+    if (this.gzipped && req.headers['accept-encoding'] && /gzip/i.exec(req.headers['accept-encoding'])) {
+      bufProp = 'gzipped';
+      headers['Content-Encoding'] = 'gzip';
+      headers['Content-Length'] = this.gzippedLength;
+    }
+
+    if (req.headers['if-none-match'] === headers['ETag'] || Date.parse(req.headers['if-modified-since']) >= this.stat.mtime) {
+      delete headers['Content-Length'];
+      delete headers['Content-Encoding'];
+      res.writeHead(304, headers);
+      res.end();
+    }
+
+    headers['Date'] = new Date().toUTCString();
+    res.writeHead(200, headers);
+
+    if (req.method === 'HEAD') {
+      res.end();
+    }
+    else {
+      res.end(this[bufProp]);
+    }
+  });
 };
 
 module.exports = Cache;

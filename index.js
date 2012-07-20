@@ -6,6 +6,7 @@ var url = require('url')
 
 var stalwart = module.exports = function(root, options) {
   var cache = {}, parsed = {};
+  typeof options.indexes !== 'undefined' || (options.indexes = true);
 
   root = path.resolve(root);
 
@@ -15,7 +16,7 @@ var stalwart = module.exports = function(root, options) {
     var urlPath = file.substring(root.length);
     cache[urlPath] = new Cache(file, options);
     // Index support
-    if (path.basename(urlPath) === 'index.html') {
+    if (options.indexes && path.basename(urlPath) === 'index.html') {
       cache[path.dirname(urlPath)] = cache[urlPath];
     }
   });

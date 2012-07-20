@@ -21,6 +21,7 @@ function Cache(file, options) {
   this.options = copy(options);
   this.options.maxAge || (this.options.maxAge = 300);
   this.file = file;
+  this.stats = fs.statSync(this.file);
   this.mime = mime.lookup(this.file);
   this.buf = fs.readFileSync(file);
   if (/^text\//.exec(this.mime)) {
@@ -30,16 +31,15 @@ function Cache(file, options) {
 }
 
 Cache.prototype.buildHeaders = function() {
-  var stats = fs.statSync(this.file);
   this.headers = {};
   this.headers['Content-Type'] = this.mime;
   var charset = mime.charsets.lookup(this.file);
   if (charset) {
     this.headers['Content-Type'] += '; charset=' + charset;
   }
-  this.headers['Last-Modified'] = stats.mtime.toUTCString();
+  this.headers['Last-Modified'] = this.stats.mtime.toUTCString();
   this.headers['ETag'] = hash.sha1(this.buf.toString());
-  this.headers['Content-Length'] = stats.size;
+  this.headers['Content-Length'] = this.stats.size;
   this.headers['Vary'] = 'Accept-Encoding';
   if (this.options.maxAge) {
     this.headers['Cache-Control'] = 'public, max-age: ' + this.options.maxAge;
@@ -62,9 +62,17 @@ Cache.prototype.stream = function(req, res) {
     headers['Content-Encoding'] = 'gzip';
     headers['Content-Length'] = this.gzippedLength;
   }
-  headers['Date'] = new Date().toUTCString();
-  res.writeHead(200, headers);
-  res.end(this[bufProp]);
+  if (req.headers['if-none-match'] === headers['ETag'] || Date.parse(req.headers['if-modified-since']) >= this.stats.mtime) {
+    delete headers['Content-Length'];
+    delete headers['Content-Encoding'];
+    res.writeHead(304, headers);
+    res.end();
+  }
+  else {
+    headers['Date'] = new Date().toUTCString();
+    res.writeHead(200, headers);
+    res.end(this[bufProp]);
+  }
 };
 
 module.exports = Cache;

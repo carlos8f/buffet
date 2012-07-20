@@ -9,7 +9,6 @@ var stalwart = require('../')
 describe('simple test', function() {
   var imgBuf;
   before(function(done) {
-    imgBuf = fs.readFileSync('test/files/folder/Alice-white-rabbit.jpg');
     var stalwartHandler = stalwart('test/files', {recursive: true});
     http.createServer(function(req, res) {
       stalwartHandler(req, res, function() {
@@ -54,7 +53,7 @@ describe('simple test', function() {
         chunks.push(chunk);
       });
       res.on('end', function() {
-        assert.deepEqual(Buffer.concat(chunks), imgBuf);
+        assert.deepEqual(Buffer.concat(chunks), fs.readFileSync('test/files/folder/Alice-white-rabbit.jpg'));
         done();
       });
     }).on('error', function(err) {
@@ -77,7 +76,7 @@ describe('simple test', function() {
         chunks.push(chunk);
       });
       decodedStream.on('end', function() {
-        assert.deepEqual(Buffer.concat(chunks), imgBuf);
+        assert.deepEqual(Buffer.concat(chunks), fs.readFileSync('test/files/hello.txt'));
         done();
       });
     }).on('error', function(err) {

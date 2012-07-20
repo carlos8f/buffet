@@ -8,6 +8,7 @@ var buffet = require('../')
   , ncp = require('ncp').ncp
   , port = Math.round(Math.random() * 20000 + 20000)
   , baseUrl = 'http://localhost:' + port
+  , cleanup = false
   ;
 
 describe('simple test', function() {
@@ -26,13 +27,15 @@ describe('simple test', function() {
     });
   });
   after(function(done) {
-    done();
-    /*
-    rimraf(testFolder, function(err) {
-      assert.ifError(err);
+    if (cleanup) {
+      rimraf(testFolder, function(err) {
+        assert.ifError(err);
+        done();
+      });
+    }
+    else {
       done();
-    });
-    */
+    }
   });
 
   it('can serve a txt file', function(done) {
@@ -126,7 +129,7 @@ describe('simple test', function() {
           // Give time for the watcher to pick it up
           setTimeout(function() {
             done();
-          }, 500);
+          }, 100);
         });
       });
     });

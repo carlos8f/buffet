@@ -12,7 +12,8 @@
     "mime": "~1.2.6",
     "diveSync": "~0.2.0",
     "node_hash": "~0.2.0",
-    "gzip-buffer": "0.0.2"
+    "gzip-buffer": "0.0.2",
+    "fs-watch-tree": "~0.2.2"
   },
   "devDependencies": {
     "mocha": "*",

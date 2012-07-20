@@ -1,0 +1,24 @@
+{
+  "name": "buffet",
+  "version": "0.0.0",
+  "description": "Treat already-buffered data as a stream",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/carlos8f/node-buffet.git"
+  },
+  "keywords": [
+    "buffer",
+    "stream",
+    "memory",
+    "pipe"
+  ],
+  "author": "Carlos Rodriguez",
+  "license": "MIT",
+  "dependencies": {
+    "mocha": "~1.3.0"
+  }
+}

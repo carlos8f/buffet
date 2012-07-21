@@ -1,5 +1,6 @@
 var http = require('http')
-  , handler = require('../')('../test/files')
+  , path = require('path')
+  , handler = require('../')(path.resolve(__dirname, '../test/files'))
   , port = 9000
   ;
 

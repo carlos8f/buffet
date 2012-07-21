@@ -1,5 +1,5 @@
 var http = require('http')
-  , handler = require('./')('test/files')
+  , handler = require('../')('../test/files')
   , port = 9000
   ;
 

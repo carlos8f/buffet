@@ -34,7 +34,7 @@ else {
     root: argv['root'],
     watch: argv['watch'],
     maxAge: argv['max-age'],
-    notFoundPath: argv['404']},
+    notFoundPath: argv['404'],
     indexes: argv['indexes'],
     index: argv['index']
   };

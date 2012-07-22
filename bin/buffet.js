@@ -1,17 +1,44 @@
 #!/usr/bin/env node
 var argv = require('optimist')
-    .usage('Usage: $0 [-p port] [--log | --log=file...] [--no-watch] [--conf=file...]')
+    .usage('Usage: $0\n'
+      + '[--root=dir] [-p port | --port=port] [--log | --log=file...]\n'
+      + '[--no-watch] [--conf=file...] [--max-age=seconds]')
+    .default('root', process.cwd())
     .alias('p', 'port')
     .default('p', 8080)
     .alias('l', 'log')
     .alias('v', 'version')
     .argv
   , http = require('http')
+  , accesslog = require('accesslog')
+  , buffet = require('../')(argv.root, {watch: argv['watch'], maxAge: argv['max-age'], notFoundPath: argv['404']})
+  , version = require(require('path').join(__dirname, '../package.json')).version
   ;
 
 if (argv.v) {
-  console.log(require(require('path').join(__dirname, '../package.json')).version);
+  console.log('buffet ' + version);
   process.exit();
 }
 
-var accesslog = require('accesslog');
+var logger;
+if (argv.log) {
+  var loggerOptions = {};
+  if (typeof argv.log === 'string') {
+    loggerOptions.path = argv.log;
+  }
+  logger = accesslog(loggerOptions);
+}
+else {
+  // dummy logger
+  logger = function(req, res, next) {
+    next();
+  };
+}
+
+http.createServer(function(req, res) {
+  logger(req, res, function() {
+    buffet(req, res, buffet.notFound.bind(null, req, res));
+  });
+}).listen(argv.port, function() {
+  console.log('buffet ' + version + ' listening on port ' + argv.port);
+});

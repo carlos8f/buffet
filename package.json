@@ -4,6 +4,10 @@
   "description": "Performance-oriented static file server",
   "version": "0.2.3",
   "main": "./lib",
+  "scripts": {
+    "test": "make test"
+  },
+  "bin": "./bin/buffet.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/carlos8f/node-buffet.git"
@@ -16,7 +20,7 @@
     "fs-watch-tree": "~0.2.2",
     "glob": "~3.1.10",
     "optimist": "~0.3.4",
-    "accesslog": "~0.0.0"
+    "accesslog": "~0.0.1"
   },
   "keywords": [
     "static",

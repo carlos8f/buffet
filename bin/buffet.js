@@ -5,11 +5,11 @@ var argv = require('optimist')
     .alias('p', 'port')
     .default('p', 8080)
     .alias('l', 'log')
+    .default('l', true)
     .alias('v', 'version')
     .argv
   , http = require('http')
   , accesslog = require('accesslog')
-  , buffet = require('../')(argv.root, {watch: argv['watch'], maxAge: argv['max-age'], notFoundPath: argv['404']})
   , version = require(require('path').join(__dirname, '../package.json')).version
   ;
 
@@ -19,9 +19,25 @@ if (argv.v) {
 }
 else if (argv.help) {
   console.log('Usage: buffet '
-      + '[--root=dir] [-p port | --port=port] [--log | --log=file...]\n'
-      + '              [--no-watch] [--conf=file...] [--max-age=seconds]');
+      + '[--root=dir] [--port=port] [--no-log | --log=file...] [--no-watch]\n'
+      + '              [--conf=file...] [--max-age=seconds] [--404=404.html]\n'
+      + '              [--no-indexes] [--index=index.html]');
   process.exit();
+}
+
+var options;
+if (argv.conf) {
+  options = require(argv.conf);
+}
+else {
+  var options = {
+    root: argv['root']
+    watch: argv['watch'],
+    maxAge: argv['max-age'],
+    notFoundPath: argv['404']},
+    indexes: argv['indexes'],
+    index: argv['index']
+  };
 }
 
 var logger;
@@ -39,6 +55,7 @@ else {
   };
 }
 
+var buffet = require('../')(options.root, options);
 http.createServer(function(req, res) {
   logger(req, res, function() {
     buffet(req, res, buffet.notFound.bind(null, req, res));

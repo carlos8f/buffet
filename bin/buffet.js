@@ -31,7 +31,7 @@ if (argv.conf) {
 }
 else {
   var options = {
-    root: argv['root']
+    root: argv['root'],
     watch: argv['watch'],
     maxAge: argv['max-age'],
     notFoundPath: argv['404']},

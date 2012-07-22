@@ -72,3 +72,8 @@ http.createServer(function(req, res) {
   console.log('test server running on port 9000');
 });
 ```
+
+License
+=======
+
+MIT

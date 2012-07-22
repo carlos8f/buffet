@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 var argv = require('optimist')
-    .usage('Usage: $0\n'
-      + '[--root=dir] [-p port | --port=port] [--log | --log=file...]\n'
-      + '[--no-watch] [--conf=file...] [--max-age=seconds]')
+    .alias('h', 'help')
     .default('root', process.cwd())
     .alias('p', 'port')
     .default('p', 8080)
@@ -17,6 +15,12 @@ var argv = require('optimist')
 
 if (argv.v) {
   console.log('buffet ' + version);
+  process.exit();
+}
+else if (argv.help) {
+  console.log('Usage: buffet '
+      + '[--root=dir] [-p port | --port=port] [--log | --log=file...]\n'
+      + '              [--no-watch] [--conf=file...] [--max-age=seconds]');
   process.exit();
 }
 

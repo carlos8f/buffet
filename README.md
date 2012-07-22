@@ -15,7 +15,7 @@ networked or unreliable in some other way.
 Buffet takes a fully-bufferred approach (hence the name, hehe) -- all files are
 fully loaded into memory when your app boots, so you will never feel the burn of
 the filesystem. In practice, this is immensely efficient. So much so that putting
-[Varnish](https://varnish-cache.org/) in front of your app might even make it
+[Varnish](https://www.varnish-cache.org/) in front of your app might even make it
 slower!
 
 Continuous deployment is also becoming all the rage, and restarting Varnish is
@@ -35,7 +35,7 @@ buffet 0.2.3 listening on port 8080
 ```
 
 Middleware version (compatible with [connect](http://www.senchalabs.org/connect/),
-[union/flatiron](http://flatironjs.org/), etc.
+[union/flatiron](http://flatironjs.org/), etc.)
 
 ```javascript
 var buffetMiddlware = buffet(root, {options...});

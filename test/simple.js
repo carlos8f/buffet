@@ -46,6 +46,7 @@ describe('simple test', function() {
       assert.equal(res.headers['vary'], 'Accept-Encoding');
       assert.ok(res.headers['date']);
       assert.equal(res.headers['cache-control'], 'public, max-age: 300');
+      assert.equal(res.headers['connection'], 'keep-alive');
       assert.equal(res.statusCode, 200);
       var data = '';
       res.setEncoding('utf8');

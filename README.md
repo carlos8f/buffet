@@ -56,6 +56,7 @@ Options
   `false` or `0` to disable. (Default: `300`)
 - `notFoundPath`: Path to be rendered on `buffetMiddleware.notFound`. (Default:
   `/404.html`)
+- `keepAlive`: Send `Connection: keep-alive` header. (Default: true)
 
 Example
 =======

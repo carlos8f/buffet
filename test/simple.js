@@ -39,7 +39,7 @@ describe('simple test', function() {
   });
 
   it('can serve a txt file', function(done) {
-    var req = http.get(baseUrl + '/hello.txt', function(res) {
+    var req = http.get(baseUrl + '/hello.txt?test=1', function(res) {
       assert.equal(res.headers['content-type'], 'text/plain');
       assert.ok(res.headers['last-modified']);
       assert.ok(res.headers['etag']);

@@ -7,6 +7,8 @@ var argv = require('optimist')
     .alias('l', 'log')
     .default('l', true)
     .alias('v', 'version')
+    .alias('t', 'threads')
+    .default('t', require('os').cpus().length)
     .argv
   , http = require('http')
   , accesslog = require('accesslog')
@@ -40,27 +42,37 @@ else {
     keepAlive: argv['keep-alive']
   };
 }
+var cluster = require('cluster');
 
-var logger;
-if (argv.log) {
-  var loggerOptions = {};
-  if (typeof argv.log === 'string') {
-    loggerOptions.path = argv.log;
+if (cluster.isMaster) {
+  for (var i = 0; i < argv.threads; i++) {
+    cluster.fork();
   }
-  logger = accesslog(loggerOptions);
+  cluster.on('exit', function(worker, code, signal) {
+    cluster.fork();
+  });
+  console.log('buffet ' + version + ' listening on port ' + argv.port);
 }
 else {
-  // dummy logger
-  logger = function(req, res, next) {
-    next();
-  };
-}
+  var logger;
+  if (argv.log) {
+    var loggerOptions = {};
+    if (typeof argv.log === 'string') {
+      loggerOptions.path = argv.log;
+    }
+    logger = accesslog(loggerOptions);
+  }
+  else {
+    // dummy logger
+    logger = function(req, res, next) {
+      next();
+    };
+  }
 
-var buffet = require('../')(options.root, options);
-http.createServer(function(req, res) {
-  logger(req, res, function() {
-    buffet(req, res, buffet.notFound.bind(null, req, res));
-  });
-}).listen(argv.port, function() {
-  console.log('buffet ' + version + ' listening on port ' + argv.port);
-});
+  var buffet = require('../')(options.root, options);
+  http.createServer(function(req, res) {
+    logger(req, res, function() {
+      buffet(req, res, buffet.notFound.bind(null, req, res));
+    });
+  }).listen(argv.port);
+}

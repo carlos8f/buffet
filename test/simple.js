@@ -128,7 +128,7 @@ describe('simple test', function() {
         fs.writeFile(testFolder + '/folder/' + folderName + '/test.json', JSON.stringify(testData), function(err) {
           assert.ifError(err);
           // Give time for the watcher to pick it up
-          setTimeout(done, 1000);
+          setTimeout(done, 100);
         });
       });
     });
@@ -172,7 +172,7 @@ describe('simple test', function() {
             });
           }).on('error', assert.ifError);
           req.end();
-        }, 1000);
+        }, 100);
       });
     });
 
@@ -195,7 +195,7 @@ describe('simple test', function() {
           });
         }).on('error', assert.ifError);
         req.end();
-        }, 1000);
+        }, 100);
       });
     });
 

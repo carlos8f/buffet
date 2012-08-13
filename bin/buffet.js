@@ -23,7 +23,7 @@ else if (argv.help) {
   console.log('Usage: buffet '
       + '[--root=dir] [--port=port] [--no-log | --log=file...] [--no-watch]\n'
       + '              [--conf=file...] [--max-age=seconds] [--404=404.html]\n'
-      + '              [--no-indexes] [--index=index.html] [--no-keep-alive]');
+      + '              [--no-indexes] [--index=index.html]');
   process.exit();
 }
 
@@ -38,8 +38,7 @@ else {
     maxAge: argv['max-age'],
     notFoundPath: argv['404'],
     indexes: argv['indexes'],
-    index: argv['index'],
-    keepAlive: argv['keep-alive']
+    index: argv['index']
   };
 }
 var cluster = require('cluster');

@@ -6,15 +6,13 @@ Performance-oriented static file server
 Idea
 ====
 
-Buffet was borne out of frustration. Serving static files should be the most
-efficient thing that a Node.js app can do. Turns out, runtime syscalls to the
-filesystem can really hang your page loads, especially if you're getting that
-humongous burst of traffic you've been dreaming of, and your filesystem is
-networked or unreliable in some other way.
+Serving static files should be the most efficient thing that a Node.js app can
+do. Turns out, runtime syscalls to the filesystem can really hang your page
+loads, especially if your filesystem is networked or unreliable in some other way.
 
-Buffet takes a fully-bufferred approach (hence the name, hehe) -- all files are
-fully loaded into memory when your app boots, so you will never feel the burn of
-the filesystem. In practice, this is immensely efficient. So much so that putting
+Buffet takes a fully-bufferred approach -- all files are fully loaded into
+memory when your app boots, so you will never feel the burn of the filesystem.
+In practice, this is immensely efficient. So much so that putting
 [Varnish](https://www.varnish-cache.org/) in front of your app might even make it
 slower!
 
@@ -56,7 +54,6 @@ Options
   `false` or `0` to disable. (Default: `300`)
 - `notFoundPath`: Path to be rendered on `buffetMiddleware.notFound`. (Default:
   `/404.html`)
-- `keepAlive`: Send `Connection: keep-alive` header. (Default: true)
 
 Example
 =======

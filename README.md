@@ -54,6 +54,7 @@ Options
   `false` or `0` to disable. (Default: `300`)
 - `notFoundPath`: Path to be rendered on `buffetMiddleware.notFound`. (Default:
   `/404.html`)
+- `keepAlive`: Timeout (in milliseconds) for HTTP keep-alive. (Default: `5000`)
 
 Example
 =======

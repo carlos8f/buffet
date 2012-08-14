@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 var argv = require('optimist')
     .alias('h', 'help')
-    .default('root', process.cwd())
     .alias('p', 'port')
     .default('p', 8080)
     .alias('l', 'log')
@@ -23,7 +22,7 @@ else if (argv.help) {
   console.log('Usage: buffet '
       + '[--root=dir] [--port=port] [--no-log | --log=file...] [--no-watch]\n'
       + '              [--conf=file...] [--max-age=seconds] [--404=404.html]\n'
-      + '              [--no-indexes] [--index=index.html] [--keep-alive=ms]');
+      + '              [--no-indexes] [--index=index.html] [--keep-alive=ms] [root]');
   process.exit();
 }
 
@@ -33,7 +32,7 @@ if (argv.conf) {
 }
 else {
   var options = {
-    root: argv['root'],
+    root: argv['root'] || argv._[0] || process.cwd(),
     watch: argv['watch'],
     maxAge: argv['max-age'],
     notFoundPath: argv['404'],

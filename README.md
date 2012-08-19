@@ -3,6 +3,8 @@ buffet
 
 Performance-oriented static file server
 
+[![build status](https://secure.travis-ci.org/carlos8f/node-buffet.png)](http://travis-ci.org/carlos8f/node-buffet)
+
 Idea
 ====
 

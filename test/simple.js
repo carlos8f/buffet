@@ -128,9 +128,7 @@ describe('simple test', function() {
         fs.writeFile(testFolder + '/folder/' + folderName + '/test.json', JSON.stringify(testData), function(err) {
           assert.ifError(err);
           // Give time for the watcher to pick it up
-          setTimeout(function() {
-            done();
-          }, 1000);
+          setTimeout(done, 100);
         });
       });
     });
@@ -153,6 +151,31 @@ describe('simple test', function() {
       req.end();
     });
 
+    it('serves an updated file', function(done) {
+      testData.boo = false;
+      fs.writeFile(testFolder + '/folder/' + folderName + '/test.json', JSON.stringify(testData), function(err) {
+        assert.ifError(err);
+        // Give the watcher some time.
+        setTimeout(function() {
+          var req = http.get(baseUrl + '/folder/' + folderName + '/test.json', function(res) {
+            assert.equal(res.statusCode, 200);
+            assert.equal(res.headers['content-type'], 'application/json');
+
+            var data = '';
+            res.setEncoding('utf8');
+            res.on('data', function(chunk) {
+              data += chunk;
+            });
+            res.on('end', function() {
+              assert.deepEqual(JSON.parse(data), testData);
+              done();
+            });
+          }).on('error', assert.ifError);
+          req.end();
+        }, 100);
+      });
+    });
+
     it('serves a 404 after removing dynamic file', function(done) {
       rimraf(testFolder + '/folder/' + folderName, function(err) {
         assert.ifError(err);
@@ -172,7 +195,7 @@ describe('simple test', function() {
           });
         }).on('error', assert.ifError);
         req.end();
-        }, 1000);
+        }, 100);
       });
     });
 

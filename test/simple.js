@@ -125,13 +125,16 @@ describe('simple test', function() {
     before(function(done) {
       fs.mkdir(testFolder + '/folder/' + folderName, function(err) {
         assert.ifError(err);
-        fs.writeFile(testFolder + '/folder/' + folderName + '/test.json', JSON.stringify(testData), function(err) {
-          assert.ifError(err);
-          // Give time for the watcher to pick it up
-          setTimeout(function() {
-            done();
-          }, 1000);
-        });
+        // Give some time for the watcher to pick up the directory
+        setTimeout(function () {
+          fs.writeFile(testFolder + '/folder/' + folderName + '/test.json', JSON.stringify(testData), function(err) {
+            assert.ifError(err);
+            // Give time for the watcher to pick up the file
+            setTimeout(function() {
+              done();
+            }, 100);
+          });
+        }, 100);
       });
     });
 
@@ -156,23 +159,24 @@ describe('simple test', function() {
     it('serves a 404 after removing dynamic file', function(done) {
       rimraf(testFolder + '/folder/' + folderName, function(err) {
         assert.ifError(err);
+        // Give some time for the watcher to pick up directory delete
         setTimeout(function() {
           var req = http.get(baseUrl + '/folder/' + folderName + '/test.json', function(res) {
-          assert.equal(res.statusCode, 404);
-          assert.equal(res.headers['content-type'], 'text/plain');
+            assert.equal(res.statusCode, 404);
+            assert.equal(res.headers['content-type'], 'text/plain');
 
-          var data = '';
-          res.setEncoding('utf8');
-          res.on('data', function(chunk) {
-            data += chunk;
-          });
-          res.on('end', function() {
-            assert.equal(data, 'file not found');
-            done();
-          });
-        }).on('error', assert.ifError);
-        req.end();
-        }, 1000);
+            var data = '';
+            res.setEncoding('utf8');
+            res.on('data', function(chunk) {
+              data += chunk;
+            });
+            res.on('end', function() {
+              assert.equal(data, 'file not found');
+              done();
+            });
+          }).on('error', assert.ifError);
+          req.end();
+        }, 100);
       });
     });
 

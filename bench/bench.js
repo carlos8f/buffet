@@ -31,10 +31,7 @@ testServer.stdout.once('data', function (chunk) {
   siege.stderr.pipe(process.stderr);
 
   siege.on('close', function () {
-    fs.unlinkSync(logFilePath);
-    if (typeof urlFilePath !== 'undefined') {
-      fs.unlinkSync(urlFilePath);
-    }
+    fs.unlinkSync(urlFilePath);
     testServer.kill();
   });
 });

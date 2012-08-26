@@ -4,24 +4,7 @@ test:
 		--timeout 5s
 
 bench: install-bench
-	@echo "node-static\n-----------"
-	@sleep 10
-	@cd bench; ./bench.js node-static && echo
-	@echo "buffet\n------"
-	@sleep 10
-	@cd bench; ./bench.js buffet && echo
-	@echo "connect\n-------"
-	@sleep 10
-	@cd bench; ./bench.js connect && echo
-	@echo "ecstatic\n--------"
-	@sleep 10
-	@cd bench; ./bench.js ecstatic && echo
-	@echo "paperboy\n--------"
-	@sleep 10
-	@cd bench; ./bench.js paperboy && echo
-	@echo "send\n----"
-	@sleep 10
-	@cd bench; ./bench.js send && echo
+	@node bench
 
 check =										\
 	if [ -z `which siege` ]; then						\

@@ -4,13 +4,13 @@ var spawn = require('child_process').spawn
   , glob = require('glob')
   , buffetRoot = require('path').resolve(__dirname, '../..')
 
-module.exports = function (test, port, cb) {
+module.exports = function (test, port, time, cb) {
   var id = test + '-' + idgen()
     , prefix = '/tmp/buffet-benchmark-' + id
     , logFilePath = prefix + '.log'
     , urlFilePath = prefix + '-urls.txt'
     , baseUrl = 'http://127.0.0.1:' + port + '/'
-    , args = ['-b', '-t', '30s', '--log=' + logFilePath, '-f', urlFilePath];
+    , args = ['-b', '-t', time + 's', '--log=' + logFilePath, '-f', urlFilePath];
 
   glob('**', {cwd: buffetRoot + '/test/files'}, function (err, matches) {
     var urls = matches.filter(function (match) {

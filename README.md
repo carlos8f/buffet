@@ -1,12 +1,12 @@
 buffet
-------
+======
 
 Performance-oriented static file server
 
 [![build status](https://secure.travis-ci.org/carlos8f/node-buffet.png)](http://travis-ci.org/carlos8f/node-buffet)
 
 Idea
-====
+----
 
 Serving static files should be the most efficient thing that a Node.js app can
 do. Turns out, runtime syscalls to the filesystem can really hang your page
@@ -16,14 +16,23 @@ Buffet takes a fully-bufferred approach -- all files are fully loaded into
 memory when your app boots, so you will never feel the burn of the filesystem.
 In practice, this is immensely efficient. So much so that putting
 [Varnish](https://www.varnish-cache.org/) in front of your app might even make it
-slower!
+slower! Well, almost (summary from buffet's `make bench`):
+
+```
+*****    varnish@3.0.2 (6532.2 rps)
+*****    buffet@0.3.10 (5381.57 rps)
+****     node-static@~0.6.0 (4083.92 rps)
+**       send@~0.0.4 (2379.78 rps)
+**       ecstatic@~0.1.6 (1978 rps)
+*        paperboy@~0.0.5 (944.64 rps)
+```
 
 Continuous deployment is also becoming all the rage, and restarting Varnish is
 a pain, so consider using Buffet instead, so your pages are always fresh and
 zesty.
 
 Usage
-=====
+-----
 
 ### Easy built-in server
 
@@ -37,7 +46,7 @@ buffet 0.2.3 listening on port 8080
 ### Middleware
 
 Middleware version (compatible with [connect](http://www.senchalabs.org/connect/),
-[union/flatiron](http://flatironjs.org/), etc.)
+[union/flatiron](http://flatironjs.org/), [middler](https://npmjs.org/package/middler), etc.)
 
 ```javascript
 var connect = require('connect')
@@ -52,7 +61,7 @@ var server = require('http').createServer(app);
 ```
 
 Options
-=======
+-------
 
 - `indexes`: True to look for `options.index` and serve it for directory requests.
   (Default: true)
@@ -66,26 +75,31 @@ Options
   `/404.html`)
 - `keepAlive`: Timeout (in milliseconds) for HTTP keep-alive. (Default: `5000`)
 
-Example
-=======
+Example with a raw HTTP server
+------------------------------
 
 ```javascript
-var buffet = require('buffet')('/var/www/html', {maxAge: 86400})
-  , http = require('http')
-  , port = 9000
-  ;
+var buffet = require('buffet')('/var/www/html');
 
-http.createServer(function(req, res) {
-  buffet(req, res, buffet.notFound.bind(null, req, res));
-}).listen(port, function() {
+http.createServer(function (req, res) {
+
+  buffet(req, res, function next () {
+    buffet.notFound(req, res);
+  });
+
+}).listen(9000, function() {
   console.log('test server running on port 9000');
 });
 ```
 
-Benchmarks
-----------
+Running your own benchmark
+--------------------------
 
-See [here](https://github.com/carlos8f/node-buffet/tree/master/bench)
+Type `make bench` in the buffet directory (you'll need
+[siege](http://www.joedog.org/siege-home/) installed).
+
+For [here](https://github.com/carlos8f/node-buffet/tree/master/bench) for the
+benchmark source code and [here](https://gist.github.com/3473500) for my results.
 
 - - -
 

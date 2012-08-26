@@ -28,7 +28,6 @@ testServer.stdout.once('data', function (chunk) {
 
   var siege = spawn('siege', args);
 
-  siege.stdout.pipe(process.stdout);
   siege.stderr.pipe(process.stderr);
 
   siege.on('close', function () {

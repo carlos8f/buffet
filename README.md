@@ -38,9 +38,8 @@ Usage
 
 ```bash
 $ npm install -g buffet
-$ cd /var/www/html
-$ buffet
-buffet 0.2.3 listening on port 8080
+$ cd /var/www/html && buffet
+buffet 0.3.11 listening on port 8080
 ```
 
 ### Middleware

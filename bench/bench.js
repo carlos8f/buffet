@@ -8,7 +8,7 @@ var spawn = require('child_process').spawn
 var testServer = spawn('node', [require('path').resolve(__dirname, './' + test)]);
 testServer.stdout.once('data', function (chunk) {
   var port = parseInt(chunk, 10)
-    , id = idgen()
+    , id = test + '-' + idgen()
     , baseUrl = 'http://localhost:' + port
     , logFilePath = '/tmp/buffet-benchmark-' + id + '.log'
     , args = ['-b', '-t', '30s', '--log=' + logFilePath]

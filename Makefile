@@ -4,12 +4,12 @@ test:
 		--timeout 5s
 
 bench: install-bench
-	@echo "buffet\n------"
-	@sleep 10
-	@cd bench; ./bench.js buffet && echo
 	@echo "node-static\n-----------"
 	@sleep 10
 	@cd bench; ./bench.js node-static && echo
+	@echo "buffet\n------"
+	@sleep 10
+	@cd bench; ./bench.js buffet && echo
 	@echo "connect\n-------"
 	@sleep 10
 	@cd bench; ./bench.js connect && echo

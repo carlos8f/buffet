@@ -49,7 +49,7 @@ Middleware version (compatible with [connect](http://www.senchalabs.org/connect/
 ```javascript
 var connect = require('connect')
   , app = connect()
-  , buffet = require('buffet')(root)
+  , buffet = require('buffet')(root, {options...})
 
 app.use(buffet);
 // also available to serve 404 pages:
@@ -77,7 +77,7 @@ Example with a raw HTTP server
 ------------------------------
 
 ```javascript
-var buffet = require('buffet')('/var/www/html');
+var buffet = require('buffet')('/var/www/html', {options...});
 
 http.createServer(function (req, res) {
 

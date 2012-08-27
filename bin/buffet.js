@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+var version = require(require('path').join(__dirname, '../package.json')).version
+
 var argv = require('optimist')
     .alias('h', 'help')
     .alias('p', 'port')
@@ -9,69 +11,59 @@ var argv = require('optimist')
     .alias('t', 'threads')
     .default('t', require('os').cpus().length)
     .argv
-  , http = require('http')
-  , accesslog = require('accesslog')
-  , version = require(require('path').join(__dirname, '../package.json')).version
-  ;
 
 if (argv.v) {
-  console.log('buffet ' + version);
+  console.error('buffet ' + version);
   process.exit();
 }
 else if (argv.help) {
-  console.log('Usage: buffet '
+  console.error('Usage: buffet '
       + '[--root=dir] [--port=port] [--no-log | --log=file...] [--no-watch]\n'
       + '              [--conf=file...] [--max-age=seconds] [--404=404.html]\n'
       + '              [--no-indexes] [--index=index.html] [--keep-alive=ms] [root]');
   process.exit();
 }
 
-var options;
+var options = {
+  root: argv['root'] || argv._[0] || process.cwd(),
+  watch: argv['watch'],
+  maxAge: argv['max-age'],
+  notFoundPath: argv['404'],
+  indexes: argv['indexes'],
+  index: argv['index'],
+  keepAlive: argv['keep-alive'],
+  threads: argv['threads'],
+  port: argv['port'],
+  log: argv['log']
+};
 if (argv.conf) {
-  options = require(argv.conf);
-}
-else {
-  var options = {
-    root: argv['root'] || argv._[0] || process.cwd(),
-    watch: argv['watch'],
-    maxAge: argv['max-age'],
-    notFoundPath: argv['404'],
-    indexes: argv['indexes'],
-    index: argv['index'],
-    keepAlive: argv['keep-alive']
-  };
-}
-var cluster = require('cluster');
-
-if (cluster.isMaster) {
-  for (var i = 0; i < argv.threads; i++) {
-    cluster.fork();
-  }
-  cluster.on('exit', function(worker, code, signal) {
-    cluster.fork();
+  var conf = require(argv.conf);
+  Object.keys(conf).forEach(function (k) {
+    options[k] = conf[k];
   });
-  console.log('buffet ' + version + ' listening on port ' + argv.port);
 }
-else {
-  var logger;
-  if (argv.log) {
-    var loggerOptions = {};
-    if (typeof argv.log === 'string') {
-      loggerOptions.path = argv.log;
-    }
-    logger = accesslog(loggerOptions);
-  }
-  else {
-    // dummy logger
-    logger = function(req, res, next) {
-      next();
-    };
-  }
 
-  var buffet = require('../')(options.root, options);
-  http.createServer(function(req, res) {
-    logger(req, res, function() {
-      buffet(req, res, buffet.notFound.bind(null, req, res));
-    });
-  }).listen(argv.port);
+var cluster = require('cluster')
+  , workerCount = 0
+
+cluster.setupMaster({
+  exec: require('path').resolve(__dirname, '../lib/worker.js')
+});
+
+// Auto-respawn
+cluster.on('exit', function (worker, code, signal) {
+  cluster.fork();
+});
+
+for (var i = 0; i < options.threads; i++) {
+  var worker = cluster.fork();
+  worker.on('message', function (message) {
+    if (message.cmd === 'BUFFET_UP') {
+      workerCount++;
+      if (workerCount === options.threads) {
+        console.error('buffet ' + version + ' listening on port ' + options.port);
+      }
+    }
+  });
+  worker.send({cmd: 'BUFFET_OPTIONS', options: options});
 }

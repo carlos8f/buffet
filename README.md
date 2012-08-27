@@ -28,8 +28,7 @@ slower! Well, almost (summary from buffet's `make bench`):
 ```
 
 Continuous deployment is also becoming all the rage, and restarting Varnish is
-a pain, so consider using Buffet instead, so your pages are always fresh and
-zesty.
+a pain, so consider using Buffet -- your pages will always be fresh and zesty!
 
 Usage
 -----

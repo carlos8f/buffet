@@ -39,7 +39,7 @@ Usage
 ```bash
 $ npm install -g buffet
 $ cd /var/www/html && buffet
-buffet 0.3.11 listening on port 8080
+buffet 0.4.0 listening on port 8080
 ```
 
 ### Middleware
@@ -87,7 +87,7 @@ http.createServer(function (req, res) {
   });
 
 }).listen(9000, function() {
-  console.log('test server running on port 9000');
+  console.log('static server running on port 9000');
 });
 ```
 

@@ -19,9 +19,9 @@
     "gzip-buffer": "0.0.2",
     "fs-watch-tree": "~0.2.2",
     "glob": "~3.1.10",
-    "optimist": "~0.3.4",
     "accesslog": "~0.0.1",
-    "middler": "~0.4.5"
+    "middler": "~0.4.5",
+    "commander": "~1.0.2"
   },
   "keywords": [
     "static",

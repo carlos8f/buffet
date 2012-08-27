@@ -8,15 +8,16 @@ var server = require('http').createServer()
   , basename = require('path').basename
   , summary = require('./lib/summary')
   , repeat = require('./lib/repeat')
-  , time = parseInt(process.argv[2] || 30, 10)
-  , wait = parseInt(process.argv[3] || 10, 10)
+  , test = process.argv[2] || '*'
+  , time = parseInt(process.argv[3] || 30, 10)
+  , wait = parseInt(process.argv[4] || 10, 10)
 
-console.log('\nnode-buffet benchmarks, ' + new Date() + '\n');
+console.log('\nnode-buffet benchmarks\n' + new Date() + '\n');
 
 server.listen(0, function () {
   var port = server.address().port;
 
-  glob('middleware/*.js', {cwd: __dirname}, function (err, matches) {
+  glob('middleware/' + test + '.js', {cwd: __dirname}, function (err, matches) {
     if (err) throw err;
 
     // randomize order
@@ -30,7 +31,7 @@ server.listen(0, function () {
         var mod = basename(match, '.js');
 
         function onErr (err) {
-          console.error(err, 'error');
+          console.error(err, '\n');
           cb();
         }
 

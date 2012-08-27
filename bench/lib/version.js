@@ -6,7 +6,7 @@ module.exports = function (mod, cb) {
   if (modVersion) {
     cb(null, modVersion);
   }
-  else if (mod === 'buffet') {
+  else if (mod.match(/^buffet/)) {
     cb(null, require('../../package').version);
   }
   else if (mod === 'varnish') {

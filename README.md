@@ -19,12 +19,13 @@ In practice, this is immensely efficient. So much so that putting
 slower! Well, almost (summary from buffet's `make bench`):
 
 ```
-*****    varnish@3.0.2 (6532.2 rps)
-*****    buffet@0.3.10 (5381.57 rps)
-****     node-static@~0.6.0 (4083.92 rps)
-**       send@~0.0.4 (2379.78 rps)
-**       ecstatic@~0.1.6 (1978 rps)
-*        paperboy@~0.0.5 (944.64 rps)
+*****    varnish@3.0.2 (6816.8 rps)
+*****    buffet-server@0.3.11 (6228.96 rps)
+*****    buffet@0.3.11 (5457.76 rps)
+****     node-static@~0.6.0 (4135.2 rps)
+**       send@~0.0.4 (2542.67 rps)
+**       ecstatic@~0.1.6 (2063.1 rps)
+*        paperboy@~0.0.5 (983.15 rps)
 ```
 
 Continuous deployment is also becoming all the rage, and restarting Varnish is

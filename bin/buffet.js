@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 var program = require('commander')
-  , version = require(require('path').join(__dirname, '../package.json')).version
+  , resolve = require('path').resolve
+  , version = require(resolve(__dirname, '../package.json')).version
 
 program
   .version(version)
   .usage('[options] [root]')
-  .option('-r, --root <path>', 'path to webroot (default: cwd)', function (root) {
-    return root || program.args[0] || process.cwd();
-  })
+  .option('-r, --root <path>', 'path to webroot (default: cwd)')
   .option('-p, --port <port>', 'specify the port (default: 8080)', Number, 8080)
   .option('-t, --threads <count>', 'number of threads to use (default: CPU count)', Number, require('os').cpus().length)
   .option('--no-log', 'disable logging')
@@ -27,6 +26,8 @@ if (program.conf) {
     program[k] = conf[k];
   });
 }
+
+program.root = resolve(program.root || program.args[0] || '.');
 
 if (program.logFile) {
   program.log = program.logFile;

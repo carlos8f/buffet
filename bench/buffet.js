@@ -1,7 +1,4 @@
-var utils = require('./lib/utils')
-
-exports.name = 'buffet';
-exports.version = utils.version(exports.name);
+exports.version = require(require('path').resolve(__dirname, '../package')).version;
 
 exports.middleware = function (options) {
   return require('../')(options.root);

@@ -1,13 +1,11 @@
 var execFile = require('child_process').execFile
-  , utils = require('./lib/utils')
+  , buffetRoot = require('path').resolve(__dirname, '..')
   , buffet
 
-exports.name = 'buffet-server';
-exports.version = utils.version(exports.name);
+exports.version = require(buffetRoot + '/package.json').version;
 
 exports.listen = function (options, cb) {
   var port = randomPort()
-    , buffetRoot = utils.resolve(__dirname, '..')
 
   buffet = execFile(buffetRoot + '/bin/buffet.js', ['-p', port, '--no-log', '--no-watch'], {cwd: options.root});
   buffet.stderr.on('data', function (chunk) {

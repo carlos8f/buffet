@@ -1,6 +1,5 @@
 var spawn = require('child_process').spawn
   , execFile = require('child_process').execFile
-  , utils = require('./lib/utils')
   , buffet
   , varnish
 
@@ -8,7 +7,7 @@ exports.name = 'varnish';
 
 exports.listen = function (options, cb) {
   var buffetPort = randomPort()
-    , buffetRoot = utils.resolve(__dirname, '..')
+    , buffetRoot = require('path').resolve(__dirname, '..')
     , port = randomPort() 
 
   buffet = execFile(buffetRoot + '/bin/buffet.js', ['-p', buffetPort], {cwd: options.root});

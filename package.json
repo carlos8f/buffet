@@ -35,7 +35,7 @@
     "idgen": "1.x",
     "rimraf": "2.x",
     "ncp": "~0.2.6",
-    "benchmarx": "~0.1.0"
+    "benchmarx": "~0.2.0"
   },
   "optionalDependencies": {},
   "engines": {

@@ -3,24 +3,32 @@ test:
 		--reporter spec \
 		--timeout 5s
 
-bench:
+check =										\
+	if [ -z `which siege` ]; then						\
+		echo "please install siege. http://www.joedog.org/siege-home/";	\
+		exit 1;								\
+	fi
+
+install-bench:
+	@$(call check)
+	@npm install
 	@cd bench; npm install
+
+bench: install-bench
 	@./node_modules/.bin/benchmarx \
 	  --title "buffet benchmarks (siege html and image)" \
 		--runner siege \
 		--opts bench/opts.json \
 		--path ",hello.txt,folder/Alice-white-rabbit.jpg"
 
-bench-slam:
-	@cd bench; npm install
+bench-slam: install-bench
 	@./node_modules/.bin/benchmarx \
 	  --title "buffet benchmarks (slam html file)" \
 		--runner slam \
 		--opts bench/opts.json \
 		--path /
 
-bench-html:
-	@cd bench; npm install
+bench-html: install-bench
 	@./node_modules/.bin/benchmarx \
 	  --title "buffet benchmarks (siege html file)" \
 		--runner siege \

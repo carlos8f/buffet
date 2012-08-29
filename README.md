@@ -19,13 +19,13 @@ In practice, this is immensely efficient. So much so that putting
 slower! Well, almost (summary from buffet's `make bench`):
 
 ```
-*****    varnish@3.0.2 (6816.8 rps)
-*****    buffet-server@0.3.11 (6228.96 rps)
-*****    buffet@0.3.11 (5457.76 rps)
-****     node-static@~0.6.0 (4135.2 rps)
-**       send@~0.0.4 (2542.67 rps)
-**       ecstatic@~0.1.6 (2063.1 rps)
-*        paperboy@~0.0.5 (983.15 rps)
+****************  varnish (5876.03 rps)
+****************  buffet-server (5587.53 rps)
+**************    buffet (5008.57 rps)
+**********        node-static (3643.76 rps)
+******            send (2130.13 rps)
+*****             ecstatic (1690.86 rps)
+***               paperboy (737.16 rps)
 ```
 
 Continuous deployment is also becoming all the rage, and restarting Varnish is
@@ -97,8 +97,9 @@ Running your own benchmark
 Type `make bench` in the buffet directory (you'll need
 [siege](http://www.joedog.org/siege-home/) installed).
 
-For [here](https://github.com/carlos8f/node-buffet/tree/master/bench) for the
-benchmark source code and [here](https://gist.github.com/3473500) for my results.
+Brought to you by [benchmarx](https://github.com/carlos8f/node-benchmarx).
+
+See [here](https://gist.github.com/3473500) for my results.
 
 - - -
 

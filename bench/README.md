@@ -14,14 +14,6 @@ In the buffet root, run:
 $ make bench
 ```
 
-Or to run a specific benchmark,
-
-```bash
-$ node bench <module> [time] [wait]
-```
-
-Time defaults to `30` (seconds), and `wait` to `10` (seconds) between tests.
-
 My results
 ----------
 

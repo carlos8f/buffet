@@ -48,13 +48,19 @@ cluster.setupMaster({
   exec: require('path').resolve(__dirname, '../lib/worker.js')
 });
 
+function fork () {
+  var worker = cluster.fork();
+  worker.send({cmd: 'BUFFET_OPTIONS', options: options});
+  return worker;
+}
+
 // Auto-respawn
 cluster.on('exit', function (worker, code, signal) {
-  cluster.fork();
+  fork();
 });
 
 for (var i = 0; i < options.threads; i++) {
-  var worker = cluster.fork();
+  var worker = fork();
   worker.on('message', function (message) {
     if (message.cmd === 'BUFFET_UP') {
       workerCount++;
@@ -63,5 +69,4 @@ for (var i = 0; i < options.threads; i++) {
       }
     }
   });
-  worker.send({cmd: 'BUFFET_OPTIONS', options: options});
 }

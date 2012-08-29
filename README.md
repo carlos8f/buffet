@@ -97,8 +97,9 @@ Running your own benchmark
 Type `make bench` in the buffet directory (you'll need
 [siege](http://www.joedog.org/siege-home/) installed).
 
-For [here](https://github.com/carlos8f/node-buffet/tree/master/bench) for the
-benchmark source code and [here](https://gist.github.com/3473500) for my results.
+Brought to you by [benchmarx](https://github.com/carlos8f/node-benchmarx).
+
+See [here](https://gist.github.com/3473500) for my results.
 
 - - -
 

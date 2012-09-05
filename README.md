@@ -34,14 +34,6 @@ a pain, so consider using Buffet -- your pages will always be fresh and zesty!
 Usage
 -----
 
-### Easy built-in server
-
-```bash
-$ npm install -g buffet
-$ cd /var/www/html && buffet
-buffet 0.4.0 listening on port 8080
-```
-
 ### Middleware
 
 Middleware version (compatible with [connect](http://www.senchalabs.org/connect/),
@@ -50,18 +42,44 @@ Middleware version (compatible with [connect](http://www.senchalabs.org/connect/
 ```javascript
 var connect = require('connect')
   , app = connect()
-  , buffet = require('buffet')(root, {options...})
+  , buffet = require('buffet')() // root defaults to ./public
 
 app.use(buffet);
-// also available to serve 404 pages:
 app.use(buffet.notFound);
 
 var server = require('http').createServer(app);
+server.listen(3000, function () {
+  console.log('test server running on port 3000');
+});
+```
+
+### Easy built-in server
+
+```bash
+$ npm install -g buffet
+$ cd /var/www/html && buffet
+buffet 0.4.0 listening on port 8080
+```
+
+### As a request handler
+
+```javascript
+var server = require('http').createServer();
+var buffet = require('buffet')(); // root defaults to ./public
+
+server.on('request', buffet);
+server.on('request', buffet.notFound);
+
+server.listen(3000, function () {
+  console.log('test server running on port 3000');
+});
 ```
 
 Options
 -------
 
+- `root`: Document root. Can also be passed as the first parameter to `buffet()`.
+  (Default: `./public`)
 - `indexes`: True to look for `options.index` and serve it for directory requests.
   (Default: true)
 - `index`: Name of index file to look for. (Default: `index.html`)
@@ -73,23 +91,6 @@ Options
 - `notFoundPath`: Path to be rendered on `buffetMiddleware.notFound`. (Default:
   `/404.html`)
 - `keepAlive`: Timeout (in milliseconds) for HTTP keep-alive. (Default: `5000`)
-
-Example with a raw HTTP server
-------------------------------
-
-```javascript
-var buffet = require('buffet')('/var/www/html', {options...});
-
-http.createServer(function (req, res) {
-
-  buffet(req, res, function next () {
-    buffet.notFound(req, res);
-  });
-
-}).listen(9000, function() {
-  console.log('static server running on port 9000');
-});
-```
 
 Running your own benchmark
 --------------------------

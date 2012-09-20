@@ -120,6 +120,69 @@ describe('simple test', function() {
     req.end();
   });
 
+  describe('defaultContentType', function() {
+    var dcPort = 42917
+      , dcBaseUrl = 'http://localhost:' + dcPort
+      , dcTestFolder = '/tmp/buffet-test-' + idgen()
+      , defaultType = 'text/crazy'
+      ;
+
+    beforeEach(function(done) {
+      ncp('test/files', dcTestFolder, done);
+    });
+
+    afterEach(function(done) {
+      if (cleanup) {
+        rimraf(dcTestFolder, done);
+      } else {
+        done();
+      }
+    });
+
+    it('serves the proper content type even if the mime is detected', function(done) {
+      //i think there is a bug in node module fs-watch-tree. set watch to true and you'll
+      //see the test 'serves an updated file' fail occasionally
+      var handler = buffet(dcTestFolder, {defaultContentType: defaultType, watch: false}); 
+         
+      var server = http.createServer(handler).listen(dcPort, function() {
+        var req = http.get(dcBaseUrl + '/index.html', function(res) {
+          assert.equal(res.statusCode, 200);
+          assert.equal(res.headers['content-type'], 'text/html');
+          req.end();
+          server.close(done);
+        });
+      });
+    });
+
+    it('serves the default content type specified in the options if it cant detect the mime', function(done) {
+      var handler = buffet(testFolder, {defaultContentType: defaultType, watch: false}); 
+
+      var server = http.createServer(handler).listen(dcPort, function() {
+        var req = http.get(dcBaseUrl + '/index', function(res) {
+          assert.equal(res.statusCode, 200);
+          assert.equal(res.headers['content-type'], defaultType);
+          req.end();
+          server.close(done);
+        });
+      });
+    });
+
+    it('serves the application/octet-stream when no defaultContentType is and it cant detect the mime', function(done) {
+      var handler = buffet(testFolder, {watch: false}); 
+
+      var server = http.createServer(handler).listen(dcPort, function() {
+        var req = http.get(dcBaseUrl + '/index', function(res) {
+          assert.equal(res.statusCode, 200);
+          assert.equal(res.headers['content-type'], 'application/octet-stream');
+          req.end();
+          server.close(done);
+        });
+      });
+    });
+
+  
+  });
+
   describe('watcher', function() {
     var testData = {yay: true}, folderName = idgen();
     before(function(done) {

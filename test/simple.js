@@ -120,6 +120,30 @@ describe('simple test', function() {
     req.end();
   });
 
+  it('serves the default content type specified in the options if it cant detect the mime', function(done) {
+    var dcPort = 42917
+      , dcBaseUrl = 'http://localhost:' + dcPort
+      , defaultType = 'text/crazy' //use something that we know doesn't exist
+      , handler = buffet(testFolder, {defaultContentType: defaultType})
+      ; 
+
+    var server = http.createServer(handler).listen(dcPort, function() {
+      var req = http.get(dcBaseUrl + '/index', function(res) {
+        assert.equal(res.statusCode, 200);
+        assert.equal(res.headers['content-type'], defaultType);
+        server.close(done);
+      });
+    });
+  });
+
+  it('serves the application/octet-stream when no defaultContentType is and it cant detect the mime', function(done) {
+    var req = http.get(baseUrl + '/index', function(res) {
+        assert.equal(res.statusCode, 200);
+        assert.equal(res.headers['content-type'], 'application/octet-stream');
+        done();
+    });
+  });
+
   describe('watcher', function() {
     var testData = {yay: true}, folderName = idgen();
     before(function(done) {

@@ -91,6 +91,7 @@ Options
 - `notFoundPath`: Path to be rendered on `buffetMiddleware.notFound`. (Default:
   `/404.html`)
 - `keepAlive`: Timeout (in milliseconds) for HTTP keep-alive. (Default: `5000`)
+- `defaultContentType`: If the file does not have an extension, set this to specify the default `Content-Type` sent to the browser. This defaults to `application/octet-stream`.
 
 Running your own benchmark
 --------------------------

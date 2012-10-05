@@ -1,0 +1,195 @@
+<!doctype html>
+<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
+<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on http://github.com/jonrohan -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen"/>
+  <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="javascripts/script.js"></script>
+
+  <title>Node-buffet</title>
+  <meta name="description" content="Performance-oriented static file server">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <header>
+      <h1 class="title">Node-buffet</h1>
+    </header>
+    <div id="container">
+      <p class="tagline">Performance-oriented static file server</p>
+      <div id="main" role="main">
+        <div class="download-bar">
+        <div class="inner">
+          <a href="https://github.com/carlos8f/node-buffet/tarball/master" class="download-button tar"><span>Download</span></a>
+          <a href="https://github.com/carlos8f/node-buffet/zipball/master" class="download-button zip"><span>Download</span></a>
+          <a href="https://github.com/carlos8f/node-buffet" class="code">View Node-buffet on GitHub</a>
+        </div>
+        <span class="blc"></span><span class="trc"></span>
+        </div>
+        <article class="markdown-body">
+          <h1>buffet</h1>
+
+<p>Performance-oriented static file server</p>
+
+<p><a href="http://travis-ci.org/carlos8f/node-buffet"><img src="https://secure.travis-ci.org/carlos8f/node-buffet.png" alt="build status"></a></p>
+
+<h2>Idea</h2>
+
+<p>Serving static files should be the most efficient thing that a Node.js app can
+do. Turns out, runtime syscalls to the filesystem can really hang your page
+loads, especially if your filesystem is networked or unreliable in some other way.</p>
+
+<p>Buffet takes a fully-bufferred approach -- all files are fully loaded into
+memory when your app boots, so you will never feel the burn of the filesystem.
+In practice, this is immensely efficient. So much so that putting
+<a href="https://www.varnish-cache.org/">Varnish</a> in front of your app might even make it
+slower! Well, almost (summary from buffet's <code>make bench</code>):</p>
+
+<pre><code>****************  varnish (5876.03 rps)
+****************  buffet-server (5587.53 rps)
+**************    buffet (5008.57 rps)
+**********        node-static (3643.76 rps)
+******            send (2130.13 rps)
+*****             ecstatic (1690.86 rps)
+***               paperboy (737.16 rps)
+</code></pre>
+
+<p>Continuous deployment is also becoming all the rage, and restarting Varnish is
+a pain, so consider using Buffet -- your pages will always be fresh and zesty!</p>
+
+<h2>Usage</h2>
+
+<h3>Middleware</h3>
+
+<p>Middleware version (compatible with <a href="http://www.senchalabs.org/connect/">connect</a>,
+<a href="http://flatironjs.org/">union/flatiron</a>, <a href="https://npmjs.org/package/middler">middler</a>, etc.)</p>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">connect</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'connect'</span><span class="p">)</span>
+  <span class="p">,</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">connect</span><span class="p">()</span>
+  <span class="p">,</span> <span class="nx">buffet</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'buffet'</span><span class="p">)()</span> <span class="c1">// root defaults to ./public</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">buffet</span><span class="p">);</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">buffet</span><span class="p">.</span><span class="nx">notFound</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'http'</span><span class="p">).</span><span class="nx">createServer</span><span class="p">(</span><span class="nx">app</span><span class="p">);</span>
+<span class="nx">server</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'test server running on port 3000'</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h3>Easy built-in server</h3>
+
+<div class="highlight"><pre><span class="nv">$ </span>npm install -g buffet
+<span class="nv">$ </span><span class="nb">cd</span> /var/www/html <span class="o">&amp;&amp;</span> buffet
+buffet 0.4.0 listening on port 8080
+</pre></div>
+
+<h3>As a request handler</h3>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'http'</span><span class="p">).</span><span class="nx">createServer</span><span class="p">();</span>
+<span class="kd">var</span> <span class="nx">buffet</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'buffet'</span><span class="p">)();</span> <span class="c1">// root defaults to ./public</span>
+
+<span class="nx">server</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'request'</span><span class="p">,</span> <span class="nx">buffet</span><span class="p">);</span>
+<span class="nx">server</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'request'</span><span class="p">,</span> <span class="nx">buffet</span><span class="p">.</span><span class="nx">notFound</span><span class="p">);</span>
+
+<span class="nx">server</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'test server running on port 3000'</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+
+<h2>Options</h2>
+
+<ul>
+<li>
+<code>root</code>: Document root. Can also be passed as the first parameter to <code>buffet()</code>.
+(Default: <code>./public</code>)</li>
+<li>
+<code>indexes</code>: True to look for <code>options.index</code> and serve it for directory requests.
+(Default: true)</li>
+<li>
+<code>index</code>: Name of index file to look for. (Default: <code>index.html</code>)</li>
+<li>
+<code>gzip</code>: True to enable gzip when clients can accept it. (Default: <code>true</code>)</li>
+<li>
+<code>watch</code>: True to auto-update the buffer when files change. (Default: <code>true</code>)</li>
+<li>
+<code>poweredBy</code>: True to add the <code>X-Powered-By</code> header. (Default: <code>true</code>)</li>
+<li>
+<code>maxAge</code>: Number of max-age seconds to set <code>Cache-Control</code> header. Set to
+<code>false</code> or <code>0</code> to disable. (Default: <code>300</code>)</li>
+<li>
+<code>notFoundPath</code>: Path to be rendered on <code>buffetMiddleware.notFound</code>. (Default:
+<code>/404.html</code>)</li>
+<li>
+<code>keepAlive</code>: Timeout (in milliseconds) for HTTP keep-alive. (Default: <code>5000</code>)</li>
+<li>
+<code>defaultContentType</code>: If the file does not have an extension, set this to specify the default <code>Content-Type</code> sent to the browser. This defaults to <code>application/octet-stream</code>.</li>
+</ul><h2>Running your own benchmark</h2>
+
+<p>Type <code>make bench</code> in the buffet directory (you'll need
+<a href="http://www.joedog.org/siege-home/">siege</a> installed).</p>
+
+<p>Brought to you by <a href="https://github.com/carlos8f/node-benchmarx">benchmarx</a>.</p>
+
+<p>See <a href="https://gist.github.com/3473500">here</a> for my results.</p>
+
+<hr><h3>Developed by <a href="http://www.terraeclipse.com">Terra Eclipse</a>
+</h3>
+
+<p>Terra Eclipse, Inc. is a nationally recognized political technology and
+strategy firm located in Aptos, CA and Washington, D.C.</p>
+
+<hr><h3>License: MIT</h3>
+
+<ul>
+<li>Copyright (C) 2012 Carlos Rodriguez (<a href="http://s8f.org/">http://s8f.org/</a>)</li>
+<li>Copyright (C) 2012 Terra Eclipse, Inc. (<a href="http://www.terraeclipse.com/">http://www.terraeclipse.com/</a>)</li>
+</ul><p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is furnished
+to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</p>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="owner">
+      <p><a href="https://github.com/carlos8f" class="avatar"><img src="https://secure.gravatar.com/avatar/6a4474e38f5860bc6e4e0ca309157b8c?s=30&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png" width="48" height="48"/></a> <a href="https://github.com/carlos8f">carlos8f</a> maintains <a href="https://github.com/carlos8f/node-buffet">Node-buffet</a></p>
+
+
+      </div>
+      <div class="creds">
+        <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br/>theme by <a href="http://twitter.com/jonrohan/">Jon Rohan</a></small>
+      </div>
+    </footer>
+  </div>
+  <div class="current-section">
+    <a href="#top">Scroll to top</a>
+    <a href="https://github.com/carlos8f/node-buffet/tarball/master" class="tar">tar</a><a href="https://github.com/carlos8f/node-buffet/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
+    <p class="name"></p>
+  </div>
+
+  
+</body>
+</html>

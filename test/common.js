@@ -10,7 +10,7 @@ http = require('http')
 request = require('request')
 middler = require('middler')
 
-setup = function () {
+setup = function (options) {
   var test = {
     dir: '/tmp/buffet-test-' + idgen(),
     port: Math.round(Math.random() * 2e4 + 2e4),
@@ -18,7 +18,7 @@ setup = function () {
       test.baseUrl = 'http://localhost:' + test.port;
       ncp(path.resolve(__dirname, 'files'), test.dir, function (err) {
         assert.ifError(err);
-        var handler = buffet(test.dir);
+        var handler = buffet(test.dir, options);
         test.server = http.createServer();
         middler()
           .add(handler)

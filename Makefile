@@ -1,7 +1,8 @@
 test:
 	@NODE_ENV=test ./node_modules/.bin/mocha \
 		--reporter spec \
-		--timeout 5s
+		--require test/common.js \
+		--timeout 2s
 
 check =										\
 	if [ -z `which siege` ]; then						\

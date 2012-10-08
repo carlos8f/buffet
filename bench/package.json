@@ -6,7 +6,6 @@
     "node-static": "~0.6.0",
     "paperboy": "~0.0.5",
     "send": "~0.0.4",
-    "cachelicious": "git://github.com/cblage/node-cachelicious.git",
     "connect": "~2.5.0"
   }
 }

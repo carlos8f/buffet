@@ -16,16 +16,19 @@ Buffet takes a fully-bufferred approach -- all files are fully loaded into
 memory when your app boots, so you will never feel the burn of the filesystem.
 In practice, this is immensely efficient. So much so that putting
 [Varnish](https://www.varnish-cache.org/) in front of your app might even make it
-slower! Well, almost (summary from buffet's `make bench`):
+slower! Well, almost (summary from buffet's `make bench-html`):
 
 ```
-****************  varnish (5876.03 rps)
-****************  buffet-server (5587.53 rps)
-**************    buffet (5008.57 rps)
-**********        node-static (3643.76 rps)
-******            send (2130.13 rps)
-*****             ecstatic (1690.86 rps)
-***               paperboy (737.16 rps)
+serving a 4k html file, siege -c 10:
+
+****************  nginx (7494.18 rps)
+****************  varnish (7118.13 rps)
+***************   buffet-server (6757.84 rps)
+**************    buffet (6102.97 rps)
+*********         node-static (3983.48 rps)
+*******           paperboy (3267.68 rps)
+*******           send (3214.04 rps)
+******            ecstatic (2530.49 rps)
 ```
 
 Continuous deployment is also becoming all the rage, and restarting Varnish is

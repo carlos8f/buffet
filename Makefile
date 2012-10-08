@@ -26,14 +26,12 @@ bench-slam: install-bench
 	@./node_modules/.bin/benchmarx \
 	  --title "buffet benchmarks (slam html file)" \
 		--runner slam \
-		--opts bench/opts.json \
-		--path /
+		--opts bench/opts.json
 
 bench-html: install-bench
 	@./node_modules/.bin/benchmarx \
 	  --title "buffet benchmarks (siege html file)" \
 		--runner siege \
-		--opts bench/opts.json \
-		--path /
+		--opts bench/opts.json
 
 .PHONY: test bench bench-slam bench-html

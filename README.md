@@ -21,14 +21,15 @@ slower! Well, almost (summary from buffet's `make bench-html`):
 ```
 serving a 4k html file, siege -c 10:
 
-****************  nginx (7494.18 rps)
-****************  varnish (7118.13 rps)
-***************   buffet-server (6757.84 rps)
-**************    buffet (6102.97 rps)
-*********         node-static (3983.48 rps)
-*******           paperboy (3267.68 rps)
-*******           send (3214.04 rps)
-******            ecstatic (2530.49 rps)
+****************  nginx (7653.15 rps)
+****************  varnish (7323.69 rps)
+***************   buffet-server (6803.9 rps)
+**************    buffet (6297.18 rps)
+**********        st (4338.95 rps)
+*********         node-static (4050.1 rps)
+********          send (3363.26 rps)
+*******           paperboy (3283.29 rps)
+******            ecstatic (2556.29 rps)
 ```
 
 Continuous deployment is also becoming all the rage, and restarting Varnish is

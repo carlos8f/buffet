@@ -17,7 +17,7 @@
     "fs-watch-tree": "~0.2.2",
     "glob": "~3.1.10",
     "accesslog": "~0.0.1",
-    "middler": "~0.4.5",
+    "middler": "~0.6.1",
     "commander": "~1.0.2",
     "dish": "~0.1.0"
   },
@@ -34,8 +34,7 @@
     "rimraf": "2.x",
     "ncp": "~0.2.6",
     "benchmarx": "~0.2.0",
-    "request": "~2.11.4",
-    "middler": "~0.4.7"
+    "request": "~2.11.4"
   },
   "optionalDependencies": {},
   "engines": {

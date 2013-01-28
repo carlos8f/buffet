@@ -43,7 +43,7 @@ Middleware version (compatible with [connect](http://www.senchalabs.org/connect/
 ```javascript
 var connect = require('connect')
   , app = connect()
-  , buffet = require('buffet')() // root defaults to ./public
+  , buffet = require('buffet')({root: './public'}) // root defaults to ./public
 
 app.use(buffet);
 app.use(buffet.notFound);
@@ -68,8 +68,11 @@ buffet 0.4.0 listening on port 8080
 var server = require('http').createServer();
 var buffet = require('buffet')(); // root defaults to ./public
 
-server.on('request', buffet);
-server.on('request', buffet.notFound);
+server.on('request', function (req, res) {
+  buffet(req, res, function () {
+    buffet.notFound(req, res);
+  });
+});
 
 server.listen(3000, function () {
   console.log('test server running on port 3000');

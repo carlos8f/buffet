@@ -12,7 +12,7 @@ describe('basic test', function () {
       assert.ok(res.headers['etag']);
       assert.equal(res.headers['vary'], 'Accept-Encoding');
       assert.ok(res.headers['date']);
-      assert.equal(res.headers['cache-control'], 'public, max-age: 300');
+      assert.equal(res.headers['cache-control'], 'public, max-age=300');
       assert.equal(res.headers['connection'], 'keep-alive');
 
       assert.equal(data, 'hello world!');

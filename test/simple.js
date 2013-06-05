@@ -36,4 +36,12 @@ describe('basic test', function () {
       done();
     });
   });
+
+  it('returns 400 on malformed URI', function (done) {
+    request(test.baseUrl + '/%', function (err, res, data) {
+      assert.ifError(err);
+      assert.equal(res.statusCode, 400);
+      done();
+    });
+  });
 });

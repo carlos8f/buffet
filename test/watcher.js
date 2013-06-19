@@ -12,9 +12,9 @@ describe('watcher', function() {
         fs.writeFile(test.dir + '/folder/' + folderName + '/test.json', JSON.stringify(testData), function(err) {
           assert.ifError(err);
           // Give time for the watcher to pick up the file
-          setTimeout(done, 100);
+          setTimeout(done, 4000);
         });
-      }, 100);
+      }, 4000);
     });
   });
 
@@ -41,7 +41,7 @@ describe('watcher', function() {
           assert.deepEqual(JSON.parse(data), testData);
           done();
         });
-      }, 100);
+      }, 4000);
     });
   });
 
@@ -55,7 +55,7 @@ describe('watcher', function() {
           assert.equal(res.statusCode, 404);
           done();
         });
-      }, 100);
+      }, 4000);
     });
   });
 });

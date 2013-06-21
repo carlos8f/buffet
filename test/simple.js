@@ -1,5 +1,5 @@
 describe('basic test', function () {
-  var test = setup();
+  var test = setup({watch: false});
   before(test.before);
   after(test.after);
 

@@ -14,12 +14,12 @@
   },
   "license": "MIT",
   "dependencies": {
-    "fs-watch-tree": "~0.2.2",
     "glob": "~3.1.10",
     "accesslog": "~0.0.1",
     "middler": "~0.6.1",
     "commander": "~1.0.2",
-    "dish": "~0.1.0"
+    "dish": "~0.1.0",
+    "saw": "~0.4.1"
   },
   "keywords": [
     "static",

@@ -7,14 +7,11 @@ describe('watcher', function() {
   before(function (done) {
     fs.mkdir(test.dir + '/folder/' + folderName, function (err) {
       assert.ifError(err);
-      // Give some time for the watcher to pick up the directory
-      setTimeout(function () {
-        fs.writeFile(test.dir + '/folder/' + folderName + '/test.json', JSON.stringify(testData), function(err) {
-          assert.ifError(err);
-          // Give time for the watcher to pick up the file
-          setTimeout(done, 100);
-        });
-      }, 100);
+      fs.writeFile(test.dir + '/folder/' + folderName + '/test.json', JSON.stringify(testData), function(err) {
+        assert.ifError(err);
+        // Give time for the watcher to pick up the file
+        setTimeout(done, 1000);
+      });
     });
   });
 
@@ -41,7 +38,7 @@ describe('watcher', function() {
           assert.deepEqual(JSON.parse(data), testData);
           done();
         });
-      }, 100);
+      }, 1000);
     });
   });
 
@@ -55,7 +52,7 @@ describe('watcher', function() {
           assert.equal(res.statusCode, 404);
           done();
         });
-      }, 100);
+      }, 1000);
     });
   });
 });

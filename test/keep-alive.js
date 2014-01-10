@@ -16,34 +16,36 @@ describe('keep-alive', function () {
 
   it("don't kill me (concurrent)", function (done) {
     var started = new Date(), ended = false, shortOk = false;
-    // a long request
-    request(test.baseUrl + '/7-seconds', function (err, res, data) {
+
+    // a short buffet request, setting req.connection.setTimeout(5000, ...)
+    request(test.baseUrl + '/hello.txt?test=1', function (err, res, data) {
       assert.ifError(err);
-      assert(!ended);
       assert.equal(res.statusCode, 200);
-      assert.equal(data, 'that was 7 seconds');
-      assert(new Date().getTime() - started >= 7000);
-      assert(shortOk);
-      ended = true;
-      done();
+      assert.equal(res.headers['content-type'], 'text/plain');
+      assert.ok(res.headers['last-modified']);
+      assert.ok(res.headers['etag']);
+      assert.equal(res.headers['vary'], 'Accept-Encoding');
+      assert.ok(res.headers['date']);
+      assert.equal(res.headers['cache-control'], 'public, max-age=300');
+      assert.equal(res.headers['connection'], 'keep-alive');
+      assert.equal(res.headers['keep-alive'], 'timeout=5');
+
+      assert.equal(data, 'hello world!');
+      assert(!ended);
+      shortOk = true;
     });
 
-    // a short concurrent request
+    // a long request. does the connection get killed?
     setTimeout(function () {
-      request(test.baseUrl + '/hello.txt?test=1', function (err, res, data) {
+      assert(shortOk);
+      request(test.baseUrl + '/7-seconds', function (err, res, data) {
         assert.ifError(err);
-        assert.equal(res.statusCode, 200);
-        assert.equal(res.headers['content-type'], 'text/plain');
-        assert.ok(res.headers['last-modified']);
-        assert.ok(res.headers['etag']);
-        assert.equal(res.headers['vary'], 'Accept-Encoding');
-        assert.ok(res.headers['date']);
-        assert.equal(res.headers['cache-control'], 'public, max-age=300');
-        assert.equal(res.headers['connection'], 'keep-alive');
-
-        assert.equal(data, 'hello world!');
         assert(!ended);
-        shortOk = true;
+        assert.equal(res.statusCode, 200);
+        assert.equal(data, 'that was 7 seconds');
+        assert(new Date().getTime() - started >= 7000);
+        ended = true;
+        done();
       });
     }, 200);
   });

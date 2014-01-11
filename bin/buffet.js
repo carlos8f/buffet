@@ -16,7 +16,6 @@ program
   .option('--notFoundPath <path>', 'path of file to serve on 404 (default: /404.html)', '/404.html')
   .option('--no-indexes', "don't serve index file when a directory is requested")
   .option('--index <file>', 'name of index file to look for (default: index.html)', 'index.html')
-  .option('--keepAlive <ms>', 'timeout for HTTP keep-alive (default: 5000)', Number, 5000)
   .option('--defaultContentType <type>', 'default content type (default: application/octet-stream)')
   .option('--conf <path>', 'path to JSON file to load options from')
   .parse(process.argv);

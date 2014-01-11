@@ -94,7 +94,10 @@ Options
   `false` or `0` to disable. (Default: `300`)
 - `notFoundPath`: Path to be rendered on `buffetMiddleware.notFound`. (Default:
   `/404.html`)
-- `keepAlive`: Timeout (in milliseconds) for HTTP keep-alive. (Default: `5000`)
+- <del>keepAlive</del>: **This option is removed as of `v0.6.1`**. The intention was to
+  clean up idle connections, but the implementation was shown to
+  [abort active requests](https://github.com/carlos8f/node-buffet/issues/14).
+  Please do not use this option!
 - `defaultContentType`: If the file does not have an extension, set this to specify the default `Content-Type` sent to the browser. This defaults to `application/octet-stream`.
 
 Running your own benchmark

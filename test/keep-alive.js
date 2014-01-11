@@ -15,7 +15,7 @@ describe('keep-alive', function () {
   });
 
   it("don't kill me (concurrent)", function (done) {
-    var started = new Date(), ended = false, shortOk = false;
+    var started = new Date();
 
     // a short buffet request, setting req.connection.setTimeout(5000, ...)
     request(test.baseUrl + '/hello.txt?test=1', function (err, res, data) {
@@ -31,23 +31,18 @@ describe('keep-alive', function () {
       assert.equal(res.headers['keep-alive'], 'timeout=5');
 
       assert.equal(data, 'hello world!');
-      assert(!ended);
-      shortOk = true;
-    });
 
-    // a long request. does the connection get killed?
-    setTimeout(function () {
-      assert(shortOk);
-      request(test.baseUrl + '/7-seconds', function (err, res, data) {
-        assert.ifError(err);
-        assert(!ended);
-        assert.equal(res.statusCode, 200);
-        assert.equal(data, 'that was 7 seconds');
-        assert(new Date().getTime() - started >= 7000);
-        ended = true;
-        done();
-      });
-    }, 200);
+      // a long request. does the connection get killed?
+      setTimeout(function () {
+        request(test.baseUrl + '/7-seconds', function (err, res, data) {
+          assert.ifError(err);
+          assert.equal(res.statusCode, 200);
+          assert.equal(data, 'that was 7 seconds');
+          assert(new Date().getTime() - started >= 7000);
+          done();
+        });
+      }, 200);
+    });
   });
 
   it('short request', function (done) {

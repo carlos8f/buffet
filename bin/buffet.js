@@ -65,7 +65,7 @@ for (var i = 0; i < options.threads; i++) {
     if (message.cmd === 'BUFFET_UP') {
       workerCount++;
       if (workerCount === options.threads) {
-        console.error('buffet ' + version + ' listening on port ' + options.port);
+        console.error('buffet ' + version + ' listening on port ' + message.port);
       }
     }
   });

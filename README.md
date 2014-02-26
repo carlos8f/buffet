@@ -91,7 +91,7 @@ Options
 - `watch`: True to auto-update the buffer when files change. (Default: `true`)
 - `poweredBy`: True to add the `X-Powered-By` header. (Default: `true`)
 - `maxAge`: Number of max-age seconds to set `Cache-Control` header. Set to
-  `false` or `0` to disable. (Default: `300`)
+  `false` to disable. (Default: `300`)
 - `notFoundPath`: Path to be rendered on `buffetMiddleware.notFound`. (Default:
   `/404.html`)
 - <del>keepAlive</del>: **This option is removed as of `v0.6.1`**. The intention was to

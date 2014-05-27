@@ -14,12 +14,12 @@
   },
   "license": "MIT",
   "dependencies": {
-    "glob": "~3.1.10",
     "accesslog": "~0.0.1",
-    "middler": "~0.6.1",
     "commander": "~1.0.2",
-    "dish": "~0.1.0",
-    "saw": "~0.4.3"
+    "dish": "^1.0.3",
+    "graceful-fs": "^2.0.3",
+    "middler": "~0.6.1",
+    "saw": "^1.0.4"
   },
   "keywords": [
     "static",

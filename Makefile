@@ -2,7 +2,9 @@ test:
 	@NODE_ENV=test ./node_modules/.bin/mocha \
 		--reporter spec \
 		--require test/common.js \
-		--timeout 12s
+		--timeout 12s \
+		--bail \
+		--globals cwd
 
 check =										\
 	if [ -z `which siege` ]; then						\

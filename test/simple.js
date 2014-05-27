@@ -10,9 +10,8 @@ describe('basic test', function () {
       assert.equal(res.headers['content-type'], 'text/plain');
       assert.ok(res.headers['last-modified']);
       assert.ok(res.headers['etag']);
-      assert.equal(res.headers['vary'], 'Accept-Encoding');
       assert.ok(res.headers['date']);
-      assert.equal(res.headers['cache-control'], 'public, max-age=300');
+      assert(!res.headers['cache-control']);
       assert.equal(res.headers['connection'], 'keep-alive');
 
       assert.equal(data, 'hello world!');

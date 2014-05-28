@@ -2,7 +2,7 @@
   "author": "Carlos Rodriguez <carlos@s8f.org> (http://s8f.org/)",
   "name": "buffet",
   "description": "Performance-oriented static file server",
-  "version": "0.6.4",
+  "version": "1.0.0",
   "main": "./lib",
   "scripts": {
     "test": "make test"

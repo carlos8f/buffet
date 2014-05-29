@@ -29,12 +29,12 @@
     "buffer"
   ],
   "devDependencies": {
-    "mocha": "*",
-    "idgen": "1.x",
-    "rimraf": "2.x",
-    "ncp": "~0.2.6",
     "benchmarx": "~0.2.0",
-    "request": "~2.11.4"
+    "idgen": "^2.0.2",
+    "mocha": "*",
+    "ncp": "~0.2.6",
+    "request": "~2.11.4",
+    "rimraf": "2.x"
   },
   "optionalDependencies": {},
   "engines": {

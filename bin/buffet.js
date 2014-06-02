@@ -45,7 +45,7 @@ var cluster = require('cluster')
   , workerCount = 0
 
 cluster.setupMaster({
-  exec: require('path').resolve(__dirname, '../lib/worker.js')
+  exec: require('path').resolve(__dirname, '../worker.js')
 });
 
 function fork () {

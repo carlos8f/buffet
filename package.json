@@ -3,7 +3,7 @@
   "name": "buffet",
   "description": "Performance-oriented static file server",
   "version": "1.0.2",
-  "main": "./lib",
+  "main": "index.js",
   "scripts": {
     "test": "make test"
   },
@@ -16,10 +16,9 @@
   "dependencies": {
     "accesslog": "~0.0.1",
     "commander": "~1.0.2",
-    "dish": "^1.0.3",
-    "graceful-fs": "^2.0.3",
-    "middler": "~0.6.1",
-    "saw": "^1.0.4"
+    "mayonnaise": "git+https://gist.github.com/cd931ba95481a7570602.git",
+    "dish": "^1.0.4",
+    "middler": "^0.7.1"
   },
   "keywords": [
     "static",

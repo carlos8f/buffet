@@ -14,7 +14,7 @@ function start (options) {
   }
 
   // Add buffet
-  var buffet = require('../')(options.root, options);
+  var buffet = require('./')(options.root, options);
   middler
     .add(buffet)
     .add(buffet.notFound);

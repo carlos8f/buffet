@@ -32,7 +32,8 @@
     "rimraf": "2.x",
     "ncp": "~0.2.6",
     "benchmarx": "~0.2.0",
-    "request": "~2.11.4"
+    "request": "~2.11.4",
+    "middler": "^0.7.1"
   },
   "optionalDependencies": {},
   "engines": {

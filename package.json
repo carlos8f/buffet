@@ -17,7 +17,8 @@
     "accesslog": "~0.0.1",
     "commander": "~1.0.2",
     "mayonnaise": "git+https://gist.github.com/cd931ba95481a7570602.git",
-    "dish": "^1.0.4"
+    "dish": "^1.0.4",
+    "middler": "^0.7.1"
   },
   "keywords": [
     "static",
@@ -32,8 +33,7 @@
     "rimraf": "2.x",
     "ncp": "~0.2.6",
     "benchmarx": "~0.2.0",
-    "request": "~2.11.4",
-    "middler": "^0.7.1"
+    "request": "~2.11.4"
   },
   "optionalDependencies": {},
   "engines": {

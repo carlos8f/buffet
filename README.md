@@ -3,7 +3,7 @@ buffet
 
 Performance-oriented static file server
 
-[![build status](https://secure.travis-ci.org/carlos8f/node-buffet.png)](http://travis-ci.org/carlos8f/node-buffet)
+[![build status](https://secure.travis-ci.org/carlos8f/buffet.png)](http://travis-ci.org/carlos8f/buffet)
 
 Idea
 ----
@@ -96,7 +96,7 @@ Options
   `/404.html`)
 - <del>keepAlive</del>: **This option is removed as of `v0.6.1`**. The intention was to
   clean up idle connections, but the implementation was shown to
-  [abort active requests](https://github.com/carlos8f/node-buffet/issues/14).
+  [abort active requests](https://github.com/carlos8f/buffet/issues/14).
   Please do not use this option!
 - `defaultContentType`: If the file does not have an extension, set this to specify the default `Content-Type` sent to the browser. This defaults to `application/octet-stream`.
 

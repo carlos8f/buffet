@@ -10,7 +10,7 @@
   "bin": "./bin/buffet.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/carlos8f/node-buffet.git"
+    "url": "git://github.com/carlos8f/buffet.git"
   },
   "license": "MIT",
   "dependencies": {
@@ -34,9 +34,5 @@
     "ncp": "~0.2.6",
     "request": "~2.11.4",
     "rimraf": "2.x"
-  },
-  "optionalDependencies": {},
-  "engines": {
-    "node": ">= 0.8.0"
   }
 }

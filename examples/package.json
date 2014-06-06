@@ -1,6 +1,6 @@
 {
   "name": "buffet-examples",
-  "description": "Examples using node-buffet",
+  "description": "Examples using buffet",
   "dependencies": {
     "connect": "~2.4.5",
     "buffet": "~0.4.3"

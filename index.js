@@ -1,6 +1,8 @@
 var Mayonnaise = require('mayonnaise').Mayonnaise
   , inherits = require('util').inherits
   , dish = require('dish')
+  , path = require('path')
+  , fs = require('fs')
   , parseUrl = require('url').parse
   , parsedUrls = {}
 
@@ -94,8 +96,15 @@ Buffet.prototype.middleware = function (options) {
   return mw;
 };
 
-module.exports = function (specs, options) {
-  return new Buffet(specs, options).middleware(options);
+module.exports = function (root, options) {
+  if (!root) {
+    try {
+      var stat = fs.statSync('public');
+      root = path.resolve('public');
+    }
+    catch (e) {}
+  }
+  return new Buffet([{globs: '**/*', cwd: root}], options).middleware(options);
 };
 
 module.exports.Buffet = Buffet;

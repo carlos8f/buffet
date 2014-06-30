@@ -87,17 +87,9 @@ Options
 - `indexes`: True to look for `options.index` and serve it for directory requests.
   (Default: true)
 - `index`: Name of index file to look for. (Default: `index.html`)
-- `gzip`: True to enable gzip when clients can accept it. (Default: `true`)
 - `watch`: True to auto-update the buffer when files change. (Default: `true`)
-- `poweredBy`: True to add the `X-Powered-By` header. (Default: `true`)
-- `maxAge`: Number of max-age seconds to set `Cache-Control` header. Set to
-  `false` or `0` to disable. (Default: `300`)
 - `notFoundPath`: Path to be rendered on `buffetMiddleware.notFound`. (Default:
   `/404.html`)
-- <del>keepAlive</del>: **This option is removed as of `v0.6.1`**. The intention was to
-  clean up idle connections, but the implementation was shown to
-  [abort active requests](https://github.com/carlos8f/buffet/issues/14).
-  Please do not use this option!
 - `defaultContentType`: If the file does not have an extension, set this to specify the default `Content-Type` sent to the browser. This defaults to `application/octet-stream`.
 
 Running your own benchmark
@@ -120,8 +112,8 @@ strategy firm located in Aptos, CA and Washington, D.C.
 
 ### License: MIT
 
-- Copyright (C) 2012 Carlos Rodriguez (http://s8f.org/)
-- Copyright (C) 2012 Terra Eclipse, Inc. (http://www.terraeclipse.com/)
+- Copyright (C) 2014 Carlos Rodriguez (http://s8f.org/)
+- Copyright (C) 2014 Terra Eclipse, Inc. (http://www.terraeclipse.com/)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

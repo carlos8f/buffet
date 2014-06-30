@@ -18,7 +18,9 @@ setup = function (options) {
       test.baseUrl = 'http://localhost:' + test.port;
       ncp(path.resolve(__dirname, 'files'), test.dir, function (err) {
         assert.ifError(err);
-        var handler = buffet(test.dir, options);
+        options || (options = {});
+        options.root || (options.root = test.dir);
+        var handler = buffet(options);
         test.server = http.createServer();
         middler()
           .add(handler)

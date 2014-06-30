@@ -97,6 +97,10 @@ Buffet.prototype.middleware = function (options) {
 };
 
 module.exports = function (root, options) {
+  if (root && root.constructor === Object) {
+    options = root;
+    root = options.root;
+  }
   if (!root) {
     try {
       var stat = fs.statSync('public');

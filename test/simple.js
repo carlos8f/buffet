@@ -3,6 +3,15 @@ describe('basic test', function () {
   before(test.before);
   after(test.after);
 
+  it('serves root index', function (done) {
+    request(test.baseUrl + '/', function (err, res, data) {
+      assert.ifError(err);
+      assert.equal(res.statusCode, 200);
+      assert(data.match(/<h1>buffet<\/h1>/));
+      done();
+    });
+  });
+
   it('can serve a txt file', function (done) {
     request(test.baseUrl + '/hello.txt?test=1', function (err, res, data) {
       assert.ifError(err);

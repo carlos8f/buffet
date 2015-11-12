@@ -16,7 +16,7 @@
   "dependencies": {
     "accesslog": "~0.0.1",
     "commander": "~1.0.2",
-    "mayonnaise": "git+https://gist.github.com/cd931ba95481a7570602.git",
+    "mayonnaise": "~0.3.1",
     "dish": "^1.0.4",
     "middler": "^0.7.1"
   },

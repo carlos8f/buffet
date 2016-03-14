@@ -21,7 +21,6 @@ describe('basic test', function () {
       assert.ok(res.headers['etag']);
       assert.ok(res.headers['date']);
       assert(!res.headers['cache-control']);
-      assert.equal(res.headers['connection'], 'keep-alive');
 
       assert.equal(data, 'hello world!');
       done();

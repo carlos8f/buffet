@@ -1,36 +1,7 @@
 buffet
 ======
 
-Performance-oriented static file server
-
-[![build status](https://secure.travis-ci.org/carlos8f/buffet.png)](http://travis-ci.org/carlos8f/buffet)
-
-Idea
-----
-
-Serving static files should be the most efficient thing that a Node.js app can
-do. Turns out, runtime syscalls to the filesystem can really hang your page
-loads, especially if your filesystem is networked or unreliable in some other way.
-
-Buffet takes a fully-bufferred approach -- all files are fully loaded into
-memory when your app boots, so you will never feel the burn of the filesystem.
-In practice, this is immensely efficient. So much so that putting
-[Varnish](https://www.varnish-cache.org/) in front of your app might even make it
-slower! Well, almost (summary from buffet's `make bench`):
-
-```
-****************  varnish (4874.64 rps)
-***************   buffet-server (4421.13 rps)
-*************     buffet (3742.6 rps)
-*********         st (2659.29 rps)
-*********         node-static (2645.31 rps)
-******            send (1646.75 rps)
-*****             ecstatic (1302.24 rps)
-***               paperboy (625.28 rps)
-```
-
-Continuous deployment is also becoming all the rage, and restarting Varnish is
-a pain, so consider using Buffet -- your pages will always be fresh and zesty!
+Static file server with in-memory cache
 
 Usage
 -----
@@ -46,6 +17,7 @@ var connect = require('connect')
   , buffet = require('buffet')({root: './public'}) // root defaults to ./public
 
 app.use(buffet);
+// (non-static routes here)
 app.use(buffet.notFound);
 
 var server = require('http').createServer(app);
@@ -59,7 +31,6 @@ server.listen(3000, function () {
 ```bash
 $ npm install -g buffet
 $ cd /var/www/html && buffet
-buffet 0.4.0 listening on port 8080
 ```
 
 ### As a request handler
@@ -68,11 +39,7 @@ buffet 0.4.0 listening on port 8080
 var server = require('http').createServer();
 var buffet = require('buffet')(); // root defaults to ./public
 
-server.on('request', function (req, res) {
-  buffet(req, res, function () {
-    buffet.notFound(req, res);
-  });
-});
+server.on('request', buffet);
 
 server.listen(3000, function () {
   console.log('test server running on port 3000');

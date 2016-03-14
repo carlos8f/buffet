@@ -1,7 +1,7 @@
 {
   "author": "Carlos Rodriguez <carlos@s8f.org> (http://s8f.org/)",
   "name": "buffet",
-  "description": "Performance-oriented static file server",
+  "description": "Static file server with in-memory cache",
   "version": "1.0.6",
   "main": "index.js",
   "scripts": {

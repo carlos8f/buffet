@@ -2,7 +2,6 @@
   "name": "buffet-examples",
   "description": "Examples using buffet",
   "dependencies": {
-    "connect": "~2.4.5",
-    "buffet": "~0.4.3"
+    "connect": "~2.4.5"
   }
 }

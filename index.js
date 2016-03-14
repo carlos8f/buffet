@@ -35,6 +35,9 @@ Buffet.prototype.middleware = function (options) {
   }
 
   var mw = function (req, res, next) {
+    if (!next) next = function () {
+      mw.notFound(req, res);
+    };
     if (req.method.match(/^get|head$/i)) {
       // check for static file
       if (self.ready) checkCache();
@@ -42,7 +45,7 @@ Buffet.prototype.middleware = function (options) {
         self.once('ready', checkCache);
       }
     }
-    else next && next();
+    else next();
 
     function checkCache () {
       var urlPath = parsedUrls[req.url];
@@ -53,12 +56,7 @@ Buffet.prototype.middleware = function (options) {
           urlPath = decodeURIComponent(urlPath).replace(/\0/g, '');
         }
         catch (err) {
-          if (err.message === 'URI malformed') {
-            res.writeHead(400);
-            return res.end();
-          }
-          if (!next) throw err;
-          return next(err);
+          return next();
         }
         parsedUrls[req.url] = urlPath;
       }
@@ -70,7 +68,7 @@ Buffet.prototype.middleware = function (options) {
         file = self.get(urlPath);
         if (file) return dish.file(file.fullPath, options)(req, res, next);
       }
-      next && next();
+      next();
     }
   };
   mw.notFound = function (req, res, next) {

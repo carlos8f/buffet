@@ -1,6 +1,6 @@
 var connect = require('connect')
   , app = connect()
-  , buffet = require('buffet')() // root defaults to ./public
+  , buffet = require('../')() // root defaults to ./public
 
 app.use(buffet);
 app.use(buffet.notFound);

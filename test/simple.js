@@ -44,10 +44,10 @@ describe('basic test', function () {
     });
   });
 
-  it('returns 400 on malformed URI', function (done) {
+  it('returns 404 on malformed URI', function (done) {
     request(test.baseUrl + '/%', function (err, res, data) {
       assert.ifError(err);
-      assert.equal(res.statusCode, 400);
+      assert.equal(res.statusCode, 404);
       done();
     });
   });

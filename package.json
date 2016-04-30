@@ -14,11 +14,11 @@
   },
   "license": "MIT",
   "dependencies": {
-    "accesslog": "~0.0.1",
-    "commander": "~1.0.2",
-    "mayonnaise": "~0.3.1",
-    "dish": "^1.0.4",
-    "middler": "^0.7.1"
+    "accesslog": "0.0.2",
+    "commander": "^2.9.0",
+    "dish": "^1.0.7",
+    "mayonnaise": "^0.3.2",
+    "middler": "^0.8.2"
   },
   "keywords": [
     "static",
@@ -28,11 +28,11 @@
     "buffer"
   ],
   "devDependencies": {
-    "benchmarx": "~0.2.0",
+    "benchmarx": "^0.2.5",
     "idgen": "^2.0.2",
-    "mocha": "*",
-    "ncp": "~0.2.6",
-    "request": "~2.11.4",
-    "rimraf": "2.x"
+    "mocha": "^2.4.5",
+    "ncp": "^2.0.0",
+    "request": "^2.72.0",
+    "rimraf": "^2.5.2"
   }
 }

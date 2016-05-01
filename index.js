@@ -7,7 +7,7 @@ var Mayonnaise = require('mayonnaise').Mayonnaise
   , parsedUrls = {}
 
 function Buffet (specs, options) {
-  if (specs.constructor === Object) {
+  if (toString.call(specs) === '[object Object]') {
     options = specs;
     specs = null;
   }

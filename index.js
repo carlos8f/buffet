@@ -95,7 +95,7 @@ Buffet.prototype.middleware = function (options) {
 };
 
 module.exports = function (root, options) {
-  if (root && root.constructor === Object) {
+  if (root && toString.call(root) === '[object Object]') {
     options = root;
     root = options.root;
   }

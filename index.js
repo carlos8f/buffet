@@ -63,7 +63,7 @@ Buffet.prototype.middleware = function (options) {
       var file = self.get(urlPath);
       if (file && file.stat.isFile()) return dish.file(file.fullPath, options)(req, res, next);
       if (options.index) {
-        if (urlPath !== '/') urlPath += '/';
+        if (urlPath.charAt(urlPath.length - 1) !== '/') urlPath += '/';
         urlPath += options.index;
         file = self.get(urlPath);
         if (file) return dish.file(file.fullPath, options)(req, res, next);
